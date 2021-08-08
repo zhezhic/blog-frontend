@@ -15,6 +15,16 @@ const routes = [
     name: 'Home',
     component: Home
   },
+  {
+    path: '/login',
+    name: 'Login',
+    component: ()=> import('views/user/Login')
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: ()=> import('views/user/Register')
+  }
 ]
 
 const router = new VueRouter({

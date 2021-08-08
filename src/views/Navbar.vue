@@ -1,32 +1,52 @@
 <template>
   <nav>
+    <!--    工具栏-->
     <v-toolbar dense>
       <v-app-bar-nav-icon v-if="$vuetify.breakpoint.xs" @click="drawer=!drawer"></v-app-bar-nav-icon>
+      <!--      导航栏-->
       <v-tabs v-show="!$vuetify.breakpoint.xs">
         <v-tab to="/home">
           首页
         </v-tab>
       </v-tabs>
+
       <v-spacer></v-spacer>
-      <v-btn icon>
+      <!--      搜索-->
+      <v-btn icon small>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
+      <!--      登陆-->
+      <v-btn icon to="/login">
+        <v-avatar class="primary" size="33">
+          <span class="white--text">登陆</span>
+        </v-avatar>
+      </v-btn>
+      <template>
+        <div aria-expanded="true">
 
-      <v-avatar size="35" class="primary" >
-        <span class="white--text">登陆</span>
-      </v-avatar>
-
+        </div>
+      </template>
+      <!--      日月-->
+      <v-btn small text @click="darkSwitch = !darkSwitch" icon>
+        <v-icon v-show="!darkSwitch" color="orange" dense>
+          mdi-white-balance-sunny
+        </v-icon>
+        <v-icon v-show="darkSwitch" dense>
+          mdi-moon-waxing-crescent
+        </v-icon>
+      </v-btn>
+      <!--注销-->
       <v-btn icon>
         <v-icon>mdi-logout</v-icon>
       </v-btn>
     </v-toolbar>
-<!--    移动端导航抽屉-->
+    <!--    移动端导航抽屉-->
     <v-navigation-drawer
         v-if="$vuetify.breakpoint.xs"
         v-model="drawer"
         absolute
-        temporary
         app
+        temporary
         width="45%"
     >
       <v-list dense nav>
@@ -55,11 +75,16 @@ export default {
     return {
       drawer: false,
       group: null,
+      darkSwitch: false,
+      dialog: false,
     }
   },
   watch: {
     group() {
       this.drawer = false
+    },
+    darkSwitch() {
+      this.$vuetify.theme.dark = this.darkSwitch
     }
   }
 }
