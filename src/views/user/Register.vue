@@ -51,6 +51,8 @@
           class="mr-10"
           color="primary lighten-2"
           width="100%"
+          @click="register"
+          :disabled="!valid"
       >
         注册
       </v-btn>
@@ -59,7 +61,7 @@
 </template>
 
 <script>
-
+import {register} from "../../api/user/register";
 export default {
   name: "Register",
   data: () => ({
@@ -85,9 +87,21 @@ export default {
   }),
 
   methods: {
-    reserve() {
+    register() {
       this.loading = true
-      setTimeout(() => (this.loading = false), 2000)
+      this.valid=false
+      register(this.userInfo).then(response =>{
+        console.log('register/response',response)
+        this.$store.commit("messageTip",response)
+        this.loading=false;
+        this.valid=true
+        if (response.code === 200) {
+          this.$router.push('login')
+          return
+        }
+      }).catch(error =>{
+        console.log('register/error',error)
+      })
     },
   },
 }
