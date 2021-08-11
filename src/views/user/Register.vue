@@ -51,7 +51,7 @@
           class="mr-10"
           color="primary lighten-2"
           width="100%"
-          @click="register"
+          @click="submit"
           :disabled="!valid"
       >
         注册
@@ -87,12 +87,11 @@ export default {
   }),
 
   methods: {
-    register() {
+    submit() {
       this.loading = true
       this.valid=false
       register(this.userInfo).then(response =>{
         console.log('register/response',response)
-        this.$store.commit("messageTip",response)
         this.loading=false;
         this.valid=true
         if (response.code === 200) {

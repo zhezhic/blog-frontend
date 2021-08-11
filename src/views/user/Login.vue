@@ -47,7 +47,7 @@
           class="ml-10"
           color="primary lighten-2"
           width="186"
-          @click="login"
+          @click="submit"
       >
         登陆
       </v-btn>
@@ -55,8 +55,8 @@
       <v-btn
           class="mr-10"
           color="grey lighten-2"
-          width="186"
           to="/register"
+          width="186"
       >
         注册
       </v-btn>
@@ -65,7 +65,6 @@
 </template>
 
 <script>
-
 export default {
   name: "Login",
   data() {
@@ -87,10 +86,18 @@ export default {
     }
   },
   methods: {
-    login() {
+    submit() {
       this.loading = true
       this.valid = false
-      setTimeout(() => (this.loading = false), 2000)
+      this.$store.dispatch('user/login', this.userInfo)
+          .then(() => {
+            this.loading = false;
+            this.valid = true
+            this.$router.push('/home')
+          }).catch(() => {
+            this.loading = false;
+            this.valid = true
+      })
     },
   },
 }

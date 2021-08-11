@@ -15,7 +15,7 @@
         dense
         v-show="color==='error'"
     >
-      mdi-checkbox-marked-circle-outline
+      mdi-close-circle-outline
     </v-icon>
     <v-icon
         dense
