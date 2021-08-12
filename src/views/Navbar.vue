@@ -15,17 +15,19 @@
       <v-btn icon small>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
+
+
       <!--      登陆-->
-      <v-btn icon to="/login">
+      <v-btn icon to="/login" v-if="!userInfo">
         <v-avatar class="primary" size="33">
           <span class="white--text">登陆</span>
         </v-avatar>
       </v-btn>
-      <template>
-        <div aria-expanded="true">
-
-        </div>
-      </template>
+      <v-btn icon v-if="userInfo">
+        <v-avatar class="success" size="33">
+          <span class="white--text">{{ userInfo.name.split('')[0] }}</span>
+        </v-avatar>
+      </v-btn>
       <!--      日月-->
       <v-btn small text @click="darkSwitch = !darkSwitch" icon>
         <v-icon v-show="!darkSwitch" color="orange" dense>
@@ -36,7 +38,7 @@
         </v-icon>
       </v-btn>
       <!--注销-->
-      <v-btn icon>
+      <v-btn icon v-if="userInfo" @click="logout">
         <v-icon>mdi-logout</v-icon>
       </v-btn>
     </v-toolbar>
@@ -69,6 +71,8 @@
 </template>
 
 <script>
+import {logout} from "../api/user/logout";
+
 export default {
   name: "Navbar",
   data() {
@@ -77,6 +81,22 @@ export default {
       group: null,
       darkSwitch: false,
       dialog: false,
+    }
+  },
+  computed:{
+    userInfo() {
+      return this.$store.state.user.userInfo
+    },
+  },
+  methods:{
+    logout() {
+      logout().then((response)=>{
+        this.$store.commit('successTip',response.message)
+        this.$store.commit('user/clearUserState')
+        this.$router.push('/')
+      }).catch((error)=>{
+        this.$store.commit('errorTip',error)
+      })
     }
   },
   watch: {

@@ -90,11 +90,16 @@ export default {
       this.loading = true
       this.valid = false
       this.$store.dispatch('user/login', this.userInfo)
-          .then(() => {
+          .then((response) => {
+            console.log('Login/then', response)
+            this.$store.commit('successTip',response.message)
             this.loading = false;
             this.valid = true
+            this.$store.dispatch('user/info')
             this.$router.push('/home')
-          }).catch(() => {
+          }).catch((error) => {
+            console.log('Login/catch', error)
+            this.$store.commit('errorTip',error)
             this.loading = false;
             this.valid = true
       })

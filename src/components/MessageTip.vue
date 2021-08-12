@@ -1,6 +1,6 @@
 <template>
   <v-snackbar
-      v-model="show"
+      v-model="snackbar.show"
       top
       :color="color"
       timeout="3000"
@@ -28,7 +28,7 @@
       <v-btn
           text
           v-bind="attrs"
-          @click="show(false)"
+          @click="snackbar.show = !snackbar.show"
       >
         Close
       </v-btn>
@@ -53,14 +53,6 @@ export default {
       }
       return 'info'
     },
-    show:{
-      get() {
-        return this.snackbar.show
-      },
-      set(value) {
-        this.updateShow(value)
-      }
-    }
   },
 }
 </script>

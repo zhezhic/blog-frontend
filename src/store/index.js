@@ -12,9 +12,14 @@ export default new Vuex.Store({
     },
   },
   mutations: {
-    messageTip(state,response) {
-      state.snackbar.message=response.message
-      state.snackbar.code=response.code
+    successTip(state,message) {
+      state.snackbar.message=message
+      state.snackbar.code=200
+      state.snackbar.show=true
+    },
+    errorTip(state,msg) {
+      state.snackbar.message=msg.message
+      state.snackbar.code=400
       state.snackbar.show=true
     },
     updateShow(state,value) {

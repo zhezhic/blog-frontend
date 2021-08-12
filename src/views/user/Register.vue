@@ -92,6 +92,7 @@ export default {
       this.valid=false
       register(this.userInfo).then(response =>{
         console.log('register/response',response)
+        this.$store.commit('successTip',response.message)
         this.loading=false;
         this.valid=true
         if (response.code === 200) {
@@ -100,6 +101,9 @@ export default {
         }
       }).catch(error =>{
         console.log('register/error',error)
+        this.$store.commit('errorTip',error)
+        this.loading=false;
+        this.valid=true
       })
     },
   },

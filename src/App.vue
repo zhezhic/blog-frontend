@@ -18,6 +18,9 @@ export default {
     //
 
   }),
+  mounted() {
+    this.$store.dispatch('user/info')
+  },
   components:{
     Navbar,
     MessageTip

@@ -1,6 +1,5 @@
 import axios from 'axios'
 import store from '../store'
-import router from '../router'
 // 1.创建axios实例
 const service = axios.create({
     // 公共接口--这里注意后面会讲,url = base url + request url
@@ -16,12 +15,9 @@ service.interceptors.request.use(
     config => {
         // 发请求前做的一些处理，数据转化，配置请求头，设置token,设置loading等，根据需求去添加
         // 注意使用token的时候需要引入cookie方法或者用本地localStorage等方法，推荐js-cookie
-        // if (store.getters.token) {
-        //   // config.params = {'token': token}    // 如果要求携带在参数中
-        //   // config.headers.token = token;       // 如果要求携带在请求头中
-        //   // bearer：w3c规范
-        //   config.headers['Authorization'] = 'Bearer ' + getToken()
-        // }
+        if (store.state.user.token) {
+          config.headers['token'] = store.state.user.token
+        }
         return config
     },
     error => {
@@ -39,24 +35,15 @@ service.interceptors.response.use(
     response => {
         const res = response.data
         // 如果自定义代码不是200，则将其判断为错误
-        store.commit("messageTip", res)
+        // if (res.message !== "success") {
+        //     store.commit("messageTip", res);
+        // }
         console.log('request/response', res);
         if (res.code !== 200) {
             return Promise.reject(new Error(res.message||'Error'))
         }
         return res
     },
-    error => {
-        /** *** 接收到异常响应的处理开始 *****/
-        // console.log('err' + error) // for debug
-        // Message({
-        //   showClose: true,
-        //   message: error.message,
-        //   type: 'error',
-        //   duration: 5 * 1000
-        // })
-        console.log('request/error', error)
-        return Promise.reject(error)
-    }
+
 )
 export default service
