@@ -18,14 +18,16 @@
 
 
       <!--      登陆-->
-      <v-btn icon to="/login" v-if="!userInfo">
+      <v-btn icon v-if="!userInfo" to="/login">
         <v-avatar class="primary" size="33">
           <span class="white--text">登陆</span>
         </v-avatar>
       </v-btn>
-      <v-btn icon v-if="userInfo">
+<!--      登陆后头像-->
+      <v-btn icon v-if="userInfo" to="/profile">
         <v-avatar class="success" size="33">
-          <span class="white--text">{{ userInfo.name.split('')[0] }}</span>
+          <img :src="userInfo.avatar" alt="用户头像" v-if="userInfo.avatar">
+          <span class="white--text" v-if="!userInfo.avatar">{{ userInfo.name.split('')[0] }}</span>
         </v-avatar>
       </v-btn>
       <!--      日月-->
@@ -38,7 +40,7 @@
         </v-icon>
       </v-btn>
       <!--注销-->
-      <v-btn icon v-if="userInfo" @click="logout">
+      <v-btn icon v-if="userInfo" @click="logout" class="ml-4">
         <v-icon>mdi-logout</v-icon>
       </v-btn>
     </v-toolbar>
@@ -49,6 +51,7 @@
         absolute
         app
         temporary
+        bottom
         width="45%"
     >
       <v-list dense nav>
@@ -72,7 +75,7 @@
 
 <script>
 import {logout} from "../api/user/logout";
-
+import {mapState} from "vuex";
 export default {
   name: "Navbar",
   data() {
@@ -80,13 +83,10 @@ export default {
       drawer: false,
       group: null,
       darkSwitch: false,
-      dialog: false,
     }
   },
   computed:{
-    userInfo() {
-      return this.$store.state.user.userInfo
-    },
+    ...mapState('user',['userInfo']),
   },
   methods:{
     logout() {
@@ -97,7 +97,7 @@ export default {
       }).catch((error)=>{
         this.$store.commit('errorTip',error)
       })
-    }
+    },
   },
   watch: {
     group() {
@@ -106,6 +106,8 @@ export default {
     darkSwitch() {
       this.$vuetify.theme.dark = this.darkSwitch
     }
+  },
+  mounted() {
   }
 }
 </script>

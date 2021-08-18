@@ -2,7 +2,7 @@
   <v-app>
     <Navbar></Navbar>
     <MessageTip></MessageTip>
-    <v-main>
+    <v-main :class="{'normalBgc':!isDark,'darkBgc':isDark}">
       <router-view/>
     </v-main>
   </v-app>
@@ -16,10 +16,16 @@ export default {
 
   data: () => ({
     //
-
   }),
+  computed:{
+    isDark() {
+      return this.$vuetify.theme.dark
+    }
+  },
   mounted() {
-    this.$store.dispatch('user/info')
+    if (this.$store.state.user.token) {
+      this.$store.dispatch('user/info');
+    }
   },
   components:{
     Navbar,
@@ -27,6 +33,15 @@ export default {
   }
 };
 </script>
-<style>
+<style >
+.normalBgc{
+  background-color: #eee;
+}
+.darkBgc{
+  background-color: #000;
+}
+.pointer {
+  cursor: pointer;
+}
 
 </style>

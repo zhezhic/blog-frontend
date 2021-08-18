@@ -10,6 +10,9 @@ export default new Vuex.Store({
       message: '',
       code:null,
     },
+    login:{
+      dialog:false
+    }
   },
   mutations: {
     successTip(state,message) {
