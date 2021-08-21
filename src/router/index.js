@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-
+import store from "../store";
 Vue.use(VueRouter)
 
 const routes = [
@@ -43,7 +43,7 @@ const routes = [
   {
     path: '/profile',
     name: 'Profile',
-    meta: {title: '个人资料'},
+    meta: {title: '个人资料',requireAuth:true},
     component: ()=> import('views/user/Profile')
   }
 ]
@@ -52,6 +52,18 @@ const router = new VueRouter({
   mode: 'history',
   routes
 })
+router.beforeEach(((to, from, next) => {
+  if (to.meta.requireAuth) {
+    if (store.state.user.token) {
+      next()
+    }else {
+      store.commit('errorTip','请登陆')
+      next('/login')
+    }
+  }else {
+    next()
+  }
+}))
 router.afterEach((to)=>{
   document.title=to.meta.title
 })

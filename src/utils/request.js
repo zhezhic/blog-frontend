@@ -35,12 +35,12 @@ service.interceptors.response.use(
     response => {
         const res = response.data
         // 如果自定义代码不是200，则将其判断为错误
-        // if (res.message !== "success") {
-        //     store.commit("messageTip", res);
-        // }
         console.log('request/response', res);
         if (res.code !== 200) {
-            return Promise.reject(new Error(res.message||'Error'))
+            if (res.code === 401) {
+                store.commit('warnTip',res.message)
+            }
+            return Promise.reject(new Error(res.message||'Error'));
         }
         return res
     },

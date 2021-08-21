@@ -24,7 +24,11 @@ export default {
   },
   mounted() {
     if (this.$store.state.user.token) {
-      this.$store.dispatch('user/info');
+      this.$store.dispatch('user/info').catch((error) => {
+        console.log(error)
+        this.$router.push('login')
+        this.$store.commit('user/clearUserState')
+      });
     }
   },
   components:{

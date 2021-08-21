@@ -26,8 +26,7 @@
 <!--      登陆后头像-->
       <v-btn icon v-if="userInfo" to="/profile">
         <v-avatar class="success" size="33">
-          <img :src="userInfo.avatar" alt="用户头像" v-if="userInfo.avatar">
-          <span class="white--text" v-if="!userInfo.avatar">{{ userInfo.name.split('')[0] }}</span>
+          <img :src="userInfo.avatar" alt="用户头像">
         </v-avatar>
       </v-btn>
       <!--      日月-->
@@ -95,7 +94,7 @@ export default {
         this.$store.commit('user/clearUserState')
         this.$router.push('/')
       }).catch((error)=>{
-        this.$store.commit('errorTip',error)
+        this.$store.commit('errorTip',error.message)
       })
     },
   },

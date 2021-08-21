@@ -5,7 +5,7 @@
         <v-card>
           <!--          头像-->
           <div class="avatar text-center">
-            <span @click.stop="uploadIAvatar.dialog=true">
+            <span @click.stop="editAvatar.dialog=true">
               <v-badge
                   avatar
                   class="pointer"
@@ -16,32 +16,31 @@
               <template v-slot:badge>
                 <v-icon color="primary" size="30">mdi-image-edit</v-icon>
               </template>
-              <v-avatar size="100" color="success">
-                <img v-if="userInfo.avatar" :src="userInfo.avatar" alt="用户头像">
-                <span v-if="!userInfo.avatar" class="white--text">{{ userInfo.name.split('')[0] }}</span>
+              <v-avatar color="success" size="100">
+                <img :src="userInfo.avatar" alt="用户头像">
               </v-avatar>
             </v-badge>
             </span>
 
             <!--            修改头像dialog-->
             <v-dialog
-                v-model="uploadIAvatar.dialog"
+                v-model="editAvatar.dialog"
             >
               <v-card>
                 <v-card-title>
                   更换头像
                   <v-spacer></v-spacer>
-                  <v-btn text @click.stop="uploadIAvatar.dialog=false">
+                  <v-btn text @click.stop="editAvatar.dialog=false">
                     <v-icon>mdi-close</v-icon>
                   </v-btn>
                 </v-card-title>
                 <v-divider></v-divider>
                 <div class="img-input">
-                  <v-form ref="imgForm" v-model="uploadIAvatar.avatarValid">
+                  <v-form v-model="editAvatar.valid">
                     <v-file-input
-                        v-model="uploadIAvatar.avatar"
-                        :loading="uploadIAvatar.loading"
-                        :rules="uploadIAvatar.avatarRule"
+                        v-model="editAvatar.avatar"
+                        :loading="editAvatar.loading"
+                        :rules="editAvatar.avatarRule"
                         accept="image/png, image/jpeg"
                         chips
                         placeholder="选择一张jpg/png格式的头像"
@@ -53,7 +52,7 @@
 
                 </div>
                 <div class="text-center">
-                  <v-btn :disabled="!uploadIAvatar.avatarValid" class="mb-5" color="primary" @click="uploadImg">上传
+                  <v-btn :disabled="!editAvatar.valid" class="mb-5" color="primary" @click="uploadImg">上传
                   </v-btn>
                 </div>
               </v-card>
@@ -80,7 +79,7 @@
           <v-divider class="mx-2"></v-divider>
         </v-card>
       </v-col>
-      <!--      2-->
+      <!--      个人资料-->
       <v-col cols="12" md="6" sm="12">
         <v-card>
           <v-card-title class="text-subtitle-1">
@@ -101,47 +100,38 @@
               <span>&nbsp;密码</span>
             </v-tab>
           </v-tabs>
+          <!--          基本资料-->
           <v-tabs-items v-model="tab">
             <v-tab-item value="tab-1">
               <v-form
-                  ref="form"
-                  class="mx-4"
+                  v-model="profile.valid"
+                  class="ma-4"
               >
-                <v-text-field
-                    v-model.trim="profile.name"
-                    :counter="10"
-                    :rules="nameRules"
-                    label="昵称"
-                    required
-                ></v-text-field>
-                <v-text-field
-                    v-model.trim="profile.email"
-                    :rules="emailRules"
-                    label="邮箱"
-                    required
-                ></v-text-field>
+                <NameField :name.sync="profile.name" ></NameField>
+                <EmailField :email.sync="profile.email" ></EmailField>
                 <v-text-field
                     v-model.trim="profile.intro"
                     class="mt-3"
+                    counter
                     label="个人介绍"
                     outlined
                     placeholder="说点什么吧"
+                    clearable
+                    autocomplete="off"
                 ></v-text-field>
-                <v-btn :disabled="profile.valid" class="mb-2" color="primary" @click="submitProfile">保存</v-btn>
+                <v-btn :disabled="isDisabled" class="mb-2" color="primary" @click="submitProfile">保存</v-btn>
               </v-form>
             </v-tab-item>
+            <!--            密码-->
             <v-tab-item value="tab-2">
               <v-form
-                  ref="form"
+                  v-model="password.valid"
+                  class="ma-4"
               >
-                <v-text-field
-                    v-model.trim="userInfo.password"
-                    :counter="6"
-                    :rules="passwordRules"
-                    label="密码"
-                    required
-                    type="password"
-                ></v-text-field>
+                <PasswordField :label="`原密码`" :password.sync="password.originPassword"></PasswordField>
+                <PasswordField :label="`新密码`" :password.sync="password.newPassword"></PasswordField>
+                <PasswordField :label="`确认密码`" :password.sync="password.confirmPassword"></PasswordField>
+                <v-btn :disabled="!password.valid" class="my-2" color="primary" @click="submitPassword">修改</v-btn>
               </v-form>
             </v-tab-item>
           </v-tabs-items>
@@ -153,17 +143,25 @@
 </template>
 
 <script>
-import {addAvatar} from "../../api/user/profile";
+import {editAvatar, updatePassword, updateProfile} from "../../api/user/profile";
 import {mapState} from "vuex";
+import PasswordField from "../../components/PasswordField";
+import NameField from "../../components/NameField";
+import EmailField from "../../components/EmailField";
 
 export default {
   name: "Profile",
+  components: {
+    PasswordField,
+    NameField,
+    EmailField
+  },
   data() {
     return {
-      uploadIAvatar: {
+      editAvatar: {
+        valid: false,
         dialog: false,
         avatar: null,
-        avatarValid: false,
         avatarRule: [
           v => !!v || '请选择头像',
           v => !v || v.size < 2000000 || '头像大小不能超过2mb',
@@ -175,54 +173,80 @@ export default {
         name: '',
         email: '',
         intro: '',
-        valid: true,
+        valid: false,
+        isDisabled: true,
       },
       password: {
         originPassword: '',
         newPassword: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        valid: false
       },
-      nameRules: [
-        v => !!v || '请输入昵称',
-        v => (v && v.length <= 10) || '昵称不能大于10位',
-      ],
-      passwordRules: [
-        v => !!v || '请输入密码',
-        v => /[0-9A-Za-z!@#]{6,}/.test(v) || '密码必须大于6位,不能包含特殊字符',
-      ],
-      emailRules: [
-        v => !!v || '请输入邮箱',
-        v => /.+@.+\..+/.test(v) || '邮箱不合法',
-      ],
     }
   },
-  created() {
+  mounted() {
     this.profile.name = this.userInfo.name
     this.profile.email = this.userInfo.email
+    this.profile.intro = this.userInfo.intro
   },
   computed: {
     ...mapState('user', ['userInfo']),
+    isDisabled: {
+      get() {
+        const {name, email, intro} = this.userInfo;
+        if (this.profile.name !== name || this.profile.email !== email || this.profile.intro !== intro) {
+          return false
+        }
+        return this.profile.isDisabled
+      },
+      set(value) {
+        this.profile.isDisabled = value
+      }
+    },
   },
   methods: {
     uploadImg() {
-      if (this.uploadIAvatar.avatarValid) {
-        this.uploadIAvatar.loading = true
+      if (this.editAvatar.valid) {
+        this.editAvatar.loading = true
         const formData = new window.FormData();
-        formData.append('file', this.uploadIAvatar.avatar)
-        addAvatar(formData).then(res => {
-          this.$store.commit('successTip', res.message)
-          this.uploadIAvatar.loading = false
-          this.uploadIAvatar.dialog = false
+        formData.append('file', this.editAvatar.avatar)
+        editAvatar(formData).then(response => {
+          this.$store.commit('successTip', response.message)
+          this.editAvatar.loading = false
+          this.editAvatar.dialog = false
           this.$router.go(0)
-          console.log('upload/img/', res)
-        }).catch(err => {
-          console.log('upload/img/', err)
-          this.uploadIAvatar.loading = false
+          console.log('upload/img/', response)
+        }).catch(error => {
+          this.$store.commit('errorTip', error.message)
+          console.log('upload/img/', error)
+          this.editAvatar.loading = false
         })
       }
     },
     submitProfile() {
-
+      if (this.profile.valid) {
+        this.isDisabled = true
+        updateProfile(this.profile).then((response) => {
+          this.$store.commit('successTip', response.message)
+          this.$store.dispatch('user/info')
+        }).catch((error) => {
+          this.$store.commit('errorTip', error.message)
+        })
+      }
+    },
+    submitPassword() {
+      if (this.password.valid) {
+        if (this.password.newPassword === this.password.confirmPassword) {
+          updatePassword(this.password.confirmPassword).then((response) => {
+            this.$store.commit('successTip', response.message)
+            this.$store.dispatch('user/info')
+          }).catch((error) => {
+            this.$store.commit('errorTip', error.message)
+          });
+        }else {
+          this.$store.commit('warningTip','两次密码不一致')
+        }
+      }
     }
   }
 }

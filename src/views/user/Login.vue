@@ -24,22 +24,8 @@
             ref="form"
             v-model="valid"
         >
-          <v-text-field
-              v-model.trim="userInfo.email"
-              :rules="emailRules"
-              label="邮箱"
-              required
-          ></v-text-field>
-
-          <v-text-field
-              v-model.trim="userInfo.password"
-              :counter="6"
-              :rules="passwordRules"
-              label="密码"
-              required
-              type="password"
-              @keydown.enter="submit"
-          ></v-text-field>
+          <EmailField :email.sync="userInfo.email"></EmailField>
+          <PasswordField :password.sync="userInfo.password" @keydown.enter.native="submit"></PasswordField>
         </v-form>
       </v-card-text>
 
@@ -69,24 +55,27 @@
 </template>
 
 <script>
+import PasswordField from "../../components/PasswordField";
+import EmailField from "../../components/EmailField";
 export default {
   name: "Login",
+  components:{
+    PasswordField,
+    EmailField
+  },
   data() {
     return {
       userInfo: {
         email: '',
         password: '',
       },
+      passwordField: {
+        isShow: false,
+        appendIcon: 'mdi-eye-off-outline',
+        type: 'password'
+      },
       loading: false,
       valid: true,
-      emailRules: [
-        v => !!v || '请输入邮箱',
-        v => /.+@.+\..+/.test(v) || '邮箱不合法',
-      ],
-      passwordRules: [
-        v => !!v || '请输入密码',
-        v => (v && v.length >= 6) || '密码必须大于6位',
-      ],
     }
   },
   methods: {
@@ -104,7 +93,7 @@ export default {
               this.$router.push('/home')
             }).catch((error) => {
           console.log('Login/catch', error)
-          this.$store.commit('errorTip',error)
+          this.$store.commit('errorTip',error.message)
           this.loading = false;
           this.valid = true
         })
