@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './modules/user'
-
+import editor from './modules/editor'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -12,6 +12,9 @@ export default new Vuex.Store({
             icon: '',
             color: '',
         },
+    },
+    getters:{
+
     },
     mutations: {
         successTip(state, message) {
@@ -35,6 +38,7 @@ export default new Vuex.Store({
     },
     actions: {},
     modules: {
-        user
+        user,
+        editor,
     }
 })

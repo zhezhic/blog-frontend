@@ -1,0 +1,8 @@
+@font-face {
+    font-family: "JetBrains-Mono";
+    src: url("./JetBrainsMono-Regular.ttf")format('truetype') ;
+}
+@font-face {
+    font-family: "Source-CN";
+    src: url("./SourceHanSansCN-Medium.otf") format('opentype');
+}

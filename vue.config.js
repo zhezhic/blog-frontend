@@ -19,5 +19,6 @@ module.exports = {
             .set('style', resolve('./src/style'))
             .set('utils', resolve('./src/utils'))
             .set('router', resolve('./src/router'))
+            .set('config', resolve('./src/config'))
     }
 }

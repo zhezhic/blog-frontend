@@ -107,17 +107,17 @@
                   v-model="profile.valid"
                   class="ma-4"
               >
-                <NameField :name.sync="profile.name" ></NameField>
-                <EmailField :email.sync="profile.email" ></EmailField>
+                <NameField :name.sync="profile.name"></NameField>
+                <EmailField :email.sync="profile.email"></EmailField>
                 <v-text-field
                     v-model.trim="profile.intro"
+                    autocomplete="off"
                     class="mt-3"
+                    clearable
                     counter
                     label="个人介绍"
                     outlined
                     placeholder="说点什么吧"
-                    clearable
-                    autocomplete="off"
                 ></v-text-field>
                 <v-btn :disabled="isDisabled" class="mb-2" color="primary" @click="submitProfile">保存</v-btn>
               </v-form>
@@ -235,17 +235,20 @@ export default {
       }
     },
     submitPassword() {
-      if (this.password.valid) {
+      if (this.password.valid && this.password.originPassword !== this.password.confirmPassword) {
         if (this.password.newPassword === this.password.confirmPassword) {
-          updatePassword(this.password.confirmPassword).then((response) => {
+          updatePassword(this.password).then((response) => {
             this.$store.commit('successTip', response.message)
-            this.$store.dispatch('user/info')
+            this.$router.push('/home')
+            this.$store.commit('user/clearUserState')
           }).catch((error) => {
             this.$store.commit('errorTip', error.message)
           });
-        }else {
-          this.$store.commit('warningTip','两次密码不一致')
+        } else {
+          this.$store.commit('warningTip', '两次密码不一致')
         }
+      }else {
+        this.$store.commit('warningTip', '新密码无变化')
       }
     }
   }

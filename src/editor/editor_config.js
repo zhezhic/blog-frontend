@@ -1,0 +1,263 @@
+export const CONFIG = {
+    'toolbar_left': [
+        {
+            id: 0,
+            name: 'image_link',
+            icon: 'mdi-image-area',
+            tip: '图片 (Ctrl+B)',
+            show: true
+        },
+        {
+            id: 1,
+            name: 'header',
+            icon: 'mdi-alpha-h-box',
+            tip: 'header (Ctrl+H)',
+            show: true
+        },
+        {
+            id: 2,
+            name: 'bold',
+            icon: 'mdi-format-bold',
+            tip: '粗体 (Ctrl+B)',
+            show: true
+        },
+        {
+            id: 3,
+            name: 'italic',
+            icon: 'mdi-format-italic',
+            tip: '斜体 (Ctrl+I)',
+            show: true
+        },
+
+        {
+            id: 4,
+            name: 'underline',
+            icon: 'mdi-format-underline',
+            tip: '下划线 (Ctrl+U)',
+            show: true
+        },
+        {
+            id: 5,
+            name: 'strikethrough',
+            icon: 'mdi-format-strikethrough-variant',
+            tip: '删除线 (Ctrl+Shift+D)',
+            show: true
+        },
+        {
+            id: 6,
+            name: 'quote',
+            icon: 'mdi-format-quote-open',
+            tip: '段落引用 (Ctrl+Q))',
+            show: true
+        },
+        {
+            id: 7,
+            name: 'ol',
+            icon: 'mdi-format-list-numbered',
+            tip: '有序列表 (Ctrl+Shift+[)',
+            show: true
+        },
+        {
+            id: 8,
+            name: 'ul',
+            icon: 'mdi-format-list-bulleted',
+            tip: '无序列表 (Ctrl+Shift+])',
+            show: true
+        },
+        {
+            id: 9,
+            name: 'link',
+            icon: 'mdi-link-variant',
+            tip: '超链接 (Ctrl+L)',
+            show: true
+        },
+        {
+            id: 10,
+            name: 'code',
+            icon: 'mdi-xml',
+            tip: '代码块 (Ctrl+Shift+C)',
+            show: true
+        },
+        {
+            id: 11,
+            name: 'table',
+            icon: 'mdi-table-large',
+            tip: '表格 (Ctrl+T)',
+            show: true
+        },
+        {
+            id: 12,
+            name: 'undo',
+            icon: 'mdi-undo-variant',
+            tip: '上一步 (Ctrl+Z)',
+            show: true
+        },
+        {
+            id: 13,
+            name: 'redo',
+            icon: 'mdi-redo-variant',
+            tip: '下一步 (Ctrl+Y))',
+            show: true
+        },
+        {
+            id: 14,
+            name: 'trash',
+            icon: 'mdi-trash-can-outline',
+            tip: '清空 (Ctrl+BreakSpace)',
+            show: true
+        },
+    ],
+    'toolbar_right': [
+        {
+            id: 0,
+            name: 'navigation',
+            icon: "mdi-view-headline",
+            tip: "标题导航 (F8)",
+            show: true
+        },
+        {
+            id: 1,
+            name: 'preview',
+            icon: "mdi-eye-outline",
+            tip: '开启关闭预览 (F9)',
+            show: true
+        },
+        {
+            id: 2,
+            name: 'preview',
+            icon: "mdi-eye-off-outline",
+            tip: '开启关闭预览 (F9)',
+            show: true
+        },
+        {
+            id: 3,
+            name: 'web_fullscreen',
+            icon: "mdi-arrow-expand-all",
+            tip: '网页全屏 (F10)',
+            show: true
+        },
+        {
+            id: 4,
+            name: 'display_fullscreen',
+            icon: "mdi-monitor-screenshot",
+            tip: '显示器全屏 (F11)',
+            show: true
+        },
+        {
+            id: 5,
+            name: 'html_text',
+            icon: "mdi-language-html5",
+            tip: '查看html',
+            show: true
+        },
+    ],
+    'language_list': ['zh-CN','en'],
+    'words_zh-CN': {
+        "start_editor": "开始编辑...",
+        "navigation_title": "导航目录",
+        "tl_bold": "粗体",
+        "tl_italic": "斜体",
+        "tl_header": "标题",
+        "tl_header_one": "一级标题",
+        "tl_header_two": "二级标题",
+        "tl_header_three": "三级标题",
+        "tl_header_four": "四级标题",
+        "tl_header_five": "五级标题",
+        "tl_header_six": "六级标题",
+        "tl_underline": "下划线",
+        "tl_strikethrough": "中划线",
+        "tl_mark": "标记",
+        "tl_superscript": "上角标",
+        "tl_subscript": "下角标",
+        "tl_quote": "段落引用",
+        "tl_ol": "有序列表",
+        "tl_ul": "无序列表",
+        "tl_link": "链接",
+        "tl_image": "添加图片链接",
+        "tl_code": "代码块",
+        "tl_table": "表格",
+        "tl_undo": "上一步",
+        "tl_redo": "下一步",
+        "tl_trash": "清空",
+        "tl_save": "保存",
+        "tl_navigation_on": "开启标题导航",
+        "tl_navigation_off": "关闭标题导航",
+        "tl_preview": "预览",
+        "tl_align_center": "居中",
+        "tl_align_left": "居左",
+        "tl_align_right": "居右",
+        "tl_edit": "编辑",
+        "tl_single_column": "单栏",
+        "tl_double_column": "双栏",
+        "tl_fullscreen_on": "全屏编辑",
+        "tl_fullscreen_off": "退出全屏",
+        "tl_read": "沉浸式阅读",
+        "tl_html_on": "查看html文本",
+        "tl_html_off": "返回markdown文本",
+        "tl_help": "markdown语法帮助",
+        "tl_upload": "上传图片",
+        "tl_upload_remove": "删除",
+        "tl_popup_link_title": "添加链接",
+        "tl_popup_link_text": "链接描述",
+        "tl_popup_link_address": "链接地址",
+        "tl_popup_img_link_title": "添加图片",
+        "tl_popup_img_link_text": "图片描述",
+        "tl_popup_img_link_address": "图片链接",
+        "tl_popup_link_sure": "确定",
+        "tl_popup_link_cancel": "取消"
+    },
+    'words_en': {
+        "start_editor": "Begin editing...",
+        "navigation_title": "Navigation",
+        "tl_bold": "Bold",
+        "tl_italic": "Italic",
+        "tl_header": "Header",
+        "tl_header_one": "Header 1",
+        "tl_header_two": "Header 2",
+        "tl_header_three": "Header 3",
+        "tl_header_four": "Header 4",
+        "tl_header_five": "Header 5",
+        "tl_header_six": "Header 6",
+        "tl_underline": "Underline",
+        "tl_strikethrough": "Strikethrough",
+        "tl_mark": "Mark",
+        "tl_superscript": "Superscript",
+        "tl_subscript": "Subscript",
+        "tl_quote": "Quote",
+        "tl_ol": "Ol",
+        "tl_ul": "Ul",
+        "tl_link": "Link",
+        "tl_image": "Image Link",
+        "tl_code": "Code",
+        "tl_table": "Table",
+        "tl_undo": "Undo",
+        "tl_redo": "Redo",
+        "tl_trash": "Trash",
+        "tl_save": "Save",
+        "tl_navigation_on": "Navigation ON",
+        "tl_navigation_off": "Navigation OFF",
+        "tl_preview": "Preview",
+        "tl_align_center": "Center text",
+        "tl_align_left": "Clamp text to the left",
+        "tl_align_right": "Clamp text to the right",
+        "tl_edit": "Edit",
+        "tl_single_column": "Single Column",
+        "tl_double_column": "Double Columns",
+        "tl_fullscreen_on": "FullScreen ON",
+        "tl_fullscreen_off": "FullScreen OFF",
+        "tl_read": "Read Model",
+        "tl_html_on": "HTML ON",
+        "tl_html_off": "HTML OFF",
+        "tl_help": "Markdown Guide",
+        "tl_upload": "Upload Images",
+        "tl_upload_remove": "Remove",
+        "tl_popup_link_title": "Add Link",
+        "tl_popup_link_text": "Link text",
+        "tl_popup_link_address": "Link address",
+        "tl_popup_img_link_title": "Add Image",
+        "tl_popup_img_link_text": "Image Text",
+        "tl_popup_img_link_address": "Image Link",
+        "tl_popup_link_sure": "Sure",
+        "tl_popup_link_cancel": "Cancel"
+    },
+}
