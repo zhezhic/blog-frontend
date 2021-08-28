@@ -16,7 +16,7 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 <!--      编辑doc-->
-      <v-btn icon to="/posts/write">
+      <v-btn icon to="/posts/write" v-show="$route.path!=='/posts/write'">
         <v-icon>mdi-file-document-edit-outline</v-icon>
       </v-btn>
       <!--      登陆-->
@@ -86,6 +86,8 @@ export default {
       darkSwitch: false,
     }
   },
+  mounted() {
+  },
   computed:{
     ...mapState('user',['userInfo']),
   },
@@ -108,8 +110,7 @@ export default {
       this.$vuetify.theme.dark = this.darkSwitch
     }
   },
-  mounted() {
-  }
+
 }
 </script>
 

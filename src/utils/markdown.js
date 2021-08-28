@@ -21,15 +21,11 @@ const markdown_config = {
     // 或 '' 如果源字符串未更改，则应在外部进行转义。
     // 如果结果以 <pre ... 开头，内部包装器则会跳过。
     highlight: function (str, lang) {
-        console.error("language:",lang)
-        console.error("preCode",str)
         if (lang && hljs.getLanguage(lang)) {
             try {
-                const preCode = '<pre class="hljs"><code>' +
+                return '<pre class="hljs"><code>' +
                     hljs.highlight(str,{language:lang,ignoreIllegals:true}).value +
                     '</code></pre>'
-                console.log(preCode)
-                return preCode;
             } catch (__) {}
         }
 
@@ -55,6 +51,9 @@ md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
     // pass token to default renderer.
     return defaultRender(tokens, idx, options, env, self);
 }
+// 引入下划线插件
+const insert = require('markdown-it-ins')
+md.use(insert)
 export {
     md
 }

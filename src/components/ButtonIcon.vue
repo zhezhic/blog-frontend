@@ -5,6 +5,8 @@
           v-bind="attrs"
           v-on="on"
           icon
+          depressed
+          :color="color"
           @click="toolbar_click(name)"
       >
         <v-icon>
@@ -21,6 +23,10 @@
 export default {
   name: "ButtonIcon",
   props:{
+    color:{
+      type: String,
+      default:''
+    },
     icon: {
       type: String,
       default: 'mdi-image-remove'

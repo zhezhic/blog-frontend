@@ -51,6 +51,12 @@ $normal-color: #f3f3f3;
 $dark-color: #272727;
 .normal{
   background-color: $normal-color;
+
+  blockquote{
+    padding: 0 1em;
+    color: #6a737d;
+    border-left: .25em solid #dfe2e5;
+  }
   table {
     border-width: 1px;
     border-color: #666666;
@@ -73,6 +79,11 @@ $dark-color: #272727;
 }
 .dark{
   background-color: $dark-color;
+  blockquote{
+    padding: 0 1em;
+    color: #6a737d;
+    border-left: .25em solid #b5b5b8;
+  }
   table {
     border-width: 1px;
     border-color: #666666;
