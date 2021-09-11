@@ -81,7 +81,7 @@ export const CONFIG = {
             id: 11,
             name: 'table',
             icon: 'mdi-table-large',
-            key: ' (Ctrl+Alt+T)',
+            key: ' (Alt+T)',
             show: true
         },
         {
@@ -143,8 +143,12 @@ export const CONFIG = {
             show: true
         },
     ],
-    'language_list': ['zh-CN','en'],
+    'language_list': ['zh-CN', 'en'],
     'words_zh-CN': {
+        'confirm': '确认',
+        'close': '取消',
+        'title': '标题',
+        'title_limit': '最多100个字',
         "start_editor": "开始编辑...",
         "navigation_title": "导航目录",
         "bold": "粗体",
@@ -174,18 +178,22 @@ export const CONFIG = {
         "preview": "预览",
         "fullscreen": "全屏",
         "html_text": "查看html文本",
-        "tl_upload": "上传图片",
-        "tl_upload_remove": "删除",
-        "tl_popup_link_title": "添加链接",
-        "tl_popup_link_text": "链接描述",
-        "tl_popup_link_address": "链接地址",
-        "tl_popup_img_link_title": "添加图片",
-        "tl_popup_img_link_text": "图片描述",
-        "tl_popup_img_link_address": "图片链接",
-        "tl_popup_link_sure": "确定",
-        "tl_popup_link_cancel": "取消"
+        'release': '发布',
+        'settings': {
+            'blog_setting': '博客设置',
+            'alias': '博客别名',
+            'release_date': '发布日期',
+            'categories': '博客分类',
+            'checked_categories':"已选择",
+            'add_category':"新增"
+        },
+        "upload_image": "上传图片",
     },
     'words_en': {
+        'confirm': 'confirm',
+        'close': 'close',
+        'title': 'title',
+        'title_limit': 'max limit 100 character',
         "start_editor": "Begin editing...",
         "navigation_title": "Navigation",
         "bold": "Bold",
@@ -215,15 +223,15 @@ export const CONFIG = {
         "preview": "Preview",
         "fullscreen": "FullScreen",
         "html_text": "HTML Text",
-        "tl_upload": "Upload Images",
-        "tl_upload_remove": "Remove",
-        "tl_popup_link_title": "Add Link",
-        "tl_popup_link_text": "Link text",
-        "tl_popup_link_address": "Link address",
-        "tl_popup_img_link_title": "Add Image",
-        "tl_popup_img_link_text": "Image Text",
-        "tl_popup_img_link_address": "Image Link",
-        "tl_popup_link_sure": "Sure",
-        "tl_popup_link_cancel": "Cancel"
+        'release': 'release',
+        'settings': {
+            'blog_setting': 'blog setting',
+            'alias': 'blog alias',
+            'release_date': 'release date',
+            'categories': 'blog categories',
+            'checked_categories':"checked categories",
+            'add_category':"add"
+        },
+        'upload_image': 'upload image',
     },
 }

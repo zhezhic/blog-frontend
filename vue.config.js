@@ -1,4 +1,6 @@
+
 const path = require('path')
+
 
 function resolve(dir) {
     return path.join(__dirname, dir)
@@ -20,5 +22,16 @@ module.exports = {
             .set('utils', resolve('./src/utils'))
             .set('router', resolve('./src/router'))
             .set('config', resolve('./src/config'))
+    },
+    configureWebpack: (config)=>{
+        config.module.rules.push({
+            test: /\.md$/,
+            use: [
+                {loader: 'vue-loader'},
+                {
+                    loader: require.resolve('./markdownLoader.js')
+                }
+            ]
+        })
     }
 }

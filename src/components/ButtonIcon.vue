@@ -5,7 +5,7 @@
           v-bind="attrs"
           v-on="on"
           icon
-          depressed
+          :disabled="disabled"
           :color="color"
           @click="toolbar_click(name)"
       >
@@ -23,6 +23,10 @@
 export default {
   name: "ButtonIcon",
   props:{
+    disabled:{
+      type: Boolean,
+      default: false
+    },
     color:{
       type: String,
       default:''

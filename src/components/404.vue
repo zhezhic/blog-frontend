@@ -1,5 +1,5 @@
 <template>
-<div class="404">
+<div class="nf">
   <span >404 NOT FOUND</span>
 </div>
 </template>
@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style scoped>
-div{
+.nf{
   text-align: center;
   color: red;
   margin-top: 300px;

@@ -73,17 +73,12 @@ export default {
         this.loading = true
         this.valid = false
         register(this.userInfo).then(response => {
-          console.log('register/response', response)
-          this.$store.commit('successTip', response.message)
           this.loading = false;
           this.valid = true
           if (response.code === 200) {
             this.$router.push('login')
-
           }
-        }).catch(error => {
-          console.log('register/error', error)
-          this.$store.commit('errorTip', error.message)
+        }).catch(() => {
           this.loading = false;
           this.valid = true
         })

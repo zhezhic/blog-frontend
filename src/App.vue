@@ -2,8 +2,8 @@
   <v-app>
     <Navbar></Navbar>
     <MessageTip></MessageTip>
+    <BackToTop></BackToTop>
     <v-main
-      :class="{normal:!isDark,dark:isDark}"
     >
       <router-view/>
     </v-main>
@@ -13,7 +13,7 @@
 <script>
 import Navbar from "./components/Navbar";
 import MessageTip from "./components/MessageTip";
-
+import BackToTop from "./components/BackToTop";
 export default {
   name: 'App',
 
@@ -21,15 +21,11 @@ export default {
 
   }),
   computed: {
-    isDark() {
-      return this.$vuetify.theme.dark
-    }
   },
   mounted() {
     //app挂载完毕如果有token向服务器发起获取用户信息请求
     if (this.$store.state.user.token) {
-      this.$store.dispatch('user/info').catch((error) => {
-        console.log(error)
+      this.$store.dispatch('user/info').catch(() => {
         this.$router.push('login')
         this.$store.commit('user/clearUserState')
       });
@@ -37,7 +33,8 @@ export default {
   },
   components: {
     Navbar,
-    MessageTip
+    MessageTip,
+    BackToTop
   }
 };
 </script>
@@ -49,9 +46,8 @@ export default {
 
 $normal-color: #f3f3f3;
 $dark-color: #272727;
-.normal{
-  background-color: $normal-color;
 
+.normal{
   blockquote{
     padding: 0 1em;
     color: #6a737d;
@@ -78,7 +74,6 @@ $dark-color: #272727;
   }
 }
 .dark{
-  background-color: $dark-color;
   blockquote{
     padding: 0 1em;
     color: #6a737d;

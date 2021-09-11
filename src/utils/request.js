@@ -36,14 +36,26 @@ service.interceptors.response.use(
         const res = response.data
         // 如果自定义代码不是200，则将其判断为错误
         console.log('request/response', res);
-        if (res.code !== 200) {
-            if (res.code === 401) {
-                store.commit('warnTip',res.message)
+        if (res.code === 200) {
+            if (res.message !== 'success') {
+                store.commit('successTip',res.message);
             }
-            return Promise.reject(new Error(res.message||'Error'));
+            return Promise.resolve(res)
+        }else {
+            switch (res.code) {
+                case 400:
+                    store.commit('errorTip',res.message)
+                    break
+                case 401:
+                    store.commit('warningTip',res.message)
+                    break
+            }
+            return Promise.reject(res)
         }
-        return res
-    },
 
+    },
+    error => {
+        console.log('request/error',error)
+    }
 )
 export default service

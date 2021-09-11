@@ -1,7 +1,7 @@
-import hljs from 'highlight.js'
-import insert from 'markdown-it-ins'
-import anchor from "markdown-it-anchor";
-import toc from 'markdown-it-toc-done-right'
+const hljs = require('highlight.js')
+const insert = require('markdown-it-ins')
+const anchor = require('markdown-it-anchor')
+const toc = require('markdown-it-toc-done-right')
 const markdown_config = {
     html:         false,        // 在源码中启用 HTML 标签
     xhtmlOut:     true,        // 使用 '/' 来闭合单标签 （比如 <br />）。
@@ -56,14 +56,11 @@ md.use(insert)// 引入下划线插件
     .use(anchor, { permalink: anchor.permalink.headerLink(), permalinkBefore: true, permalinkSymbol: '#' } ) //生成标题锚点
     .use(toc);//${toc}自动生成标题导航列表
 
-export  {
-    md,
+module.exports = function(src) {
+    const html = md.render(src)
+    return (
+        `<template>\n` +
+        `<div class="markdown">${html}</div>\n` +
+        `</template>\n`
+    )
 }
-// module.exports = function(src) {
-//     const html = md.render(src)
-//     return (
-//         `<template>\n` +
-//         `<div class="markdown">${html}</div>\n` +
-//         `</template>\n`
-//     )
-// }

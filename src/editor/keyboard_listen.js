@@ -13,13 +13,17 @@ export default function keydownListen($vm) {
             // once
             // console.log(`once ${e.key}`)
             switch (e.key) {
+                case 'F8':
+                    e.preventDefault()
+                    $vm.toolbar_right_click('navigation')
+                    break
                 case 'F9':
                     e.preventDefault()
                     $vm.toolbar_right_click('preview')
                     break
                 case 'F10':
                     e.preventDefault()
-                    $vm.screen()
+                    $vm.toolbar_right_click('fullscreen')
                     break
                 case 'F12':
                     e.preventDefault()

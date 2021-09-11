@@ -21,7 +21,6 @@ const mutations = {
 }
 const actions = {
     login({commit}, userInfo) {
-        console.log('store/user/login', userInfo)
         return login(userInfo)
                 .then((response) => {
                     const {data} = response

@@ -119,7 +119,13 @@
                     outlined
                     placeholder="说点什么吧"
                 ></v-text-field>
-                <v-btn :disabled="isDisabled" class="mb-2" color="primary" @click="submitProfile">保存</v-btn>
+                <v-btn
+                    :disabled="isDisabled"
+                    class="mb-2"
+                    color="primary"
+                    @click="submitProfile"
+                    :loading="profile.loading"
+                >保存</v-btn>
               </v-form>
             </v-tab-item>
             <!--            密码-->
@@ -131,7 +137,13 @@
                 <PasswordField :label="`原密码`" :password.sync="password.originPassword"></PasswordField>
                 <PasswordField :label="`新密码`" :password.sync="password.newPassword"></PasswordField>
                 <PasswordField :label="`确认密码`" :password.sync="password.confirmPassword"></PasswordField>
-                <v-btn :disabled="!password.valid" class="my-2" color="primary" @click="submitPassword">修改</v-btn>
+                <v-btn
+                    :disabled="!password.valid"
+                    :loading="password.loading"
+                    class="my-2"
+                    color="primary"
+                    @click="submitPassword"
+                >修改</v-btn>
               </v-form>
             </v-tab-item>
           </v-tabs-items>
@@ -174,13 +186,15 @@ export default {
         email: '',
         intro: '',
         valid: false,
-        isDisabled: true,
+        disabled: true,
+        loading: false,
       },
       password: {
         originPassword: '',
         newPassword: '',
         confirmPassword: '',
-        valid: false
+        valid: false,
+        loading:false
       },
     }
   },
@@ -197,10 +211,10 @@ export default {
         if (this.profile.name !== name || this.profile.email !== email || this.profile.intro !== intro) {
           return false
         }
-        return this.profile.isDisabled
+        return this.profile.disabled
       },
       set(value) {
-        this.profile.isDisabled = value
+        this.profile.disabled = value
       }
     },
   },
@@ -208,42 +222,39 @@ export default {
     uploadImg() {
       if (this.editAvatar.valid) {
         this.editAvatar.loading = true
-        const formData = new window.FormData();
+        this.editAvatar.valid=false
+        const formData = new FormData();
         formData.append('file', this.editAvatar.avatar)
-        editAvatar(formData).then(response => {
-          this.$store.commit('successTip', response.message)
+        editAvatar(formData).then(() => {
           this.editAvatar.loading = false
           this.editAvatar.dialog = false
           this.$router.go(0)
-          console.log('upload/img/', response)
-        }).catch(error => {
-          this.$store.commit('errorTip', error.message)
-          console.log('upload/img/', error)
+        }).catch(() => {
           this.editAvatar.loading = false
         })
       }
     },
     submitProfile() {
       if (this.profile.valid) {
-        this.isDisabled = true
-        updateProfile(this.profile).then((response) => {
-          this.$store.commit('successTip', response.message)
+        this.profile.loading=true
+        updateProfile(this.profile).then(() => {
           this.$store.dispatch('user/info')
-        }).catch((error) => {
-          this.$store.commit('errorTip', error.message)
+          this.profile.loading=false
+        }).catch(()=>{
+          this.profile.loading=false
         })
       }
     },
     submitPassword() {
       if (this.password.valid && this.password.originPassword !== this.password.confirmPassword) {
         if (this.password.newPassword === this.password.confirmPassword) {
-          updatePassword(this.password).then((response) => {
-            this.$store.commit('successTip', response.message)
+          this.password.loading=true
+          updatePassword(this.password).then(() => {
             this.$router.push('/home')
             this.$store.commit('user/clearUserState')
-          }).catch((error) => {
-            this.$store.commit('errorTip', error.message)
-          });
+          }).catch(()=>{
+            this.password.loading=false
+          })
         } else {
           this.$store.commit('warningTip', '两次密码不一致')
         }

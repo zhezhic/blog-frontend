@@ -40,20 +40,32 @@ export const routes = [
     //     {
     //       path: '/posts/list',
     //       name: 'PostList',
-    //       component: () => import('@/views/post/PostList'),
+    //       component: () => import('@/views/blog/PostList'),
     //       meta: { title: '所有文章'}
     //     },
     {
         path: '/posts/write',
         name: 'PostWrite',
-        component: () => import('views/post/Editor'),
-        meta: {title: '写文章'}
+        component: () => import('views/blog/Editor'),
+        meta: {title: '写博客'}
     },
     {
         path: '/posts/write2',
         name: 'PostWrite2',
-        component: () => import('views/post/Editor2'),
-        meta: {title: '写文章'}
+        component: () => import('views/blog/Editor2'),
+        meta: {title: 'test'}
+    },
+    {
+        path: '/posts/write3',
+        name: 'MarkdownRenderer',
+        component: () => import('comps/zhezhi.md'),
+        meta: {title: 'test'}
+    },
+    {
+        path: '/test',
+        name: 'Test',
+        component: () => import('comps/Test'),
+        meta: {title: 'test'}
     },
     //   ]
     // },
