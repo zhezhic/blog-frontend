@@ -2,6 +2,9 @@
   <nav>
     <!--    工具栏-->
     <v-toolbar dense>
+      <v-btn color="primary">
+        {{ $vuetify.breakpoint.name }}
+      </v-btn>
       <v-app-bar-nav-icon v-if="$vuetify.breakpoint.xs" @click="drawer=!drawer"></v-app-bar-nav-icon>
       <!--      导航栏-->
       <v-tabs v-show="!$vuetify.breakpoint.xs">
@@ -12,27 +15,29 @@
 
       <v-spacer></v-spacer>
       <!--      搜索-->
-      <v-btn icon >
+      <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
-<!--      编辑doc-->
-      <v-btn icon to="/posts/write" v-show="$route.path!=='/posts/write'">
-        <v-icon>mdi-file-document-edit-outline</v-icon>
-      </v-btn>
+      <!--      编辑doc-->
+      <router-link to="/edit">
+        <v-btn v-show="$route.path!=='/edit'" icon>
+          <v-icon>mdi-file-document-edit-outline</v-icon>
+        </v-btn>
+      </router-link>
       <!--      登陆-->
-      <v-btn icon v-if="!userInfo" to="/login">
+      <v-btn v-if="!userInfo" icon to="/login">
         <v-avatar class="primary" size="33">
           <span class="white--text">登陆</span>
         </v-avatar>
       </v-btn>
-<!--      登陆后头像-->
-      <v-btn icon v-if="userInfo" to="/profile">
+      <!--      登陆后头像-->
+      <v-btn v-if="userInfo" icon to="/profile">
         <v-avatar class="success" size="33">
           <img :src="userInfo.avatar" alt="用户头像">
         </v-avatar>
       </v-btn>
       <!--      日月-->
-      <v-btn @click="darkSwitch = !darkSwitch" icon>
+      <v-btn icon @click="darkSwitch = !darkSwitch">
         <v-icon v-show="!darkSwitch" color="orange" dense>
           mdi-white-balance-sunny
         </v-icon>
@@ -41,7 +46,7 @@
         </v-icon>
       </v-btn>
       <!--注销-->
-      <v-btn icon v-if="userInfo" @click="logout" class="ml-4">
+      <v-btn v-if="userInfo" class="ml-4" icon @click="logout">
         <v-icon>mdi-logout</v-icon>
       </v-btn>
     </v-toolbar>
@@ -51,8 +56,8 @@
         v-model="drawer"
         absolute
         app
-        temporary
         bottom
+        temporary
         width="45%"
     >
       <v-list dense nav>
@@ -77,6 +82,7 @@
 <script>
 import {logout} from "../api/user/logout";
 import {mapState} from "vuex";
+
 export default {
   name: "Navbar",
   data() {
@@ -88,17 +94,17 @@ export default {
   },
   mounted() {
   },
-  computed:{
-    ...mapState('user',['userInfo']),
+  computed: {
+    ...mapState('user', ['userInfo']),
   },
-  methods:{
+  methods: {
     logout() {
-      logout().then((response)=>{
-        this.$store.commit('successTip',response.message)
+      logout().then((response) => {
+        this.$store.commit('successTip', response.message)
         this.$store.commit('user/clearUserState')
         this.$router.push('/')
-      }).catch((error)=>{
-        this.$store.commit('errorTip',error.message)
+      }).catch((error) => {
+        this.$store.commit('errorTip', error.message)
       })
     },
   },

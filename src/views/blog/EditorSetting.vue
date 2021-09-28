@@ -25,7 +25,6 @@
           :label="words.settings.alias"
           :messages="alias_info"
           autocomplete="off"
-          counter
           dense
           outlined
       ></v-text-field>
@@ -75,105 +74,69 @@
       <v-divider></v-divider>
       <!--              文章分类-->
       <div class="text-uppercase">{{ words.settings.categories }}</div>
-      <!--      <div>{{ checked_category }}</div>-->
-      <!--      <div>{{ checked_category_object }}</div>-->
-      <!--      已选择展示框-->
-      <v-autocomplete
-          v-model="checked_category"
-          :items="optionalCategory"
-          :label="words.settings.checked_categories"
-          chips
-          class="mx-10"
-          multiple
+      <v-treeview
+          v-if="categories"
+          v-model="checked_category_object"
+          :items="categories"
+          activatable
+          hoverable
+          return-object
+          rounded
+          selectable
+          selection-type="independent"
+          transition
       >
-        <template v-slot:selection="data">
-          <v-chip
-              :key="JSON.stringify(data.item)"
-              v-bind="data.attrs"
-              :disabled="data.disabled"
-              :input-value="data.selected"
-              close
-              @click:close="data.parent.selectItem(data.item)"
-          >
-            <v-avatar
-                class="accent white--text"
-                left
-                v-text="data.item.slice(0, 1).toUpperCase()"
-            ></v-avatar>
-            {{ data.item }}
-          </v-chip>
-        </template>
-      </v-autocomplete>
-      <!--      <v-treeview-->
-      <!--          v-model="checked_category_object"-->
-      <!--          :items="categories"-->
-      <!--          dense-->
-      <!--          return-object-->
-      <!--          selectable-->
-      <!--          selection-type="independent"-->
-      <!--          transition-->
-      <!--      >-->
-      <!--      </v-treeview>-->
-      <!--      选择列表-->
-      <v-list>
-        <v-list-group
-            v-for="category in categories"
-            :key="category.id"
-            no-action
-            sub-group
-        >
-          <template v-slot:activator>
-            <v-checkbox
-                v-model="checked_category"
-                :value="category.name"
-            ></v-checkbox>
-            <v-list-item-title>{{ category.name }}</v-list-item-title>
-          </template>
-          <template v-if="category.children">
-            <v-list-item
-                v-for="children in category.children"
-                :key="children.id"
-
-            >
-
-              <v-checkbox
-                  v-model="checked_category"
-                  :value="children.name"
-              ></v-checkbox>
-              <v-list-item-title>{{ children.name }}</v-list-item-title>
-            </v-list-item>
-          </template>
-        </v-list-group>
-      </v-list>
+      </v-treeview>
+      <!--      <div>{{checked_category}}</div>-->
+      <!--      <div>{{checked_category_object}}</div>-->
       <v-btn
           v-show="show_addCategory"
-          class="ml-3 mt-3"
+          class="ma-3"
           color="primary"
-          depressed
           @click="show_addCategory=!show_addCategory"
       >
-        {{ words.settings.add_category }}
+        <v-icon>mdi-new-box</v-icon>
       </v-btn>
       <v-expand-transition>
-        <v-select
-            v-model="addCategory_path"
+        <div
             v-show="!show_addCategory"
-            :items="optionalCategory"
-            label="Select"
-            dense
-            outlined
+            class="mx-5"
         >
-        </v-select>
+          <v-select
+              v-model="parentCategory"
+              :items="optionalCategory"
+              label="选择添加路径"
+              messages="默认为根目录"
+          ></v-select>
+          <v-text-field
+              v-model="category_name"
+              label="分类名称"
+          ></v-text-field>
+          <ConfirmComponent @click.native="addCategory"></ConfirmComponent>
+          <CloseComponent class="ml-5" @click.native="show_addCategory=!show_addCategory"></CloseComponent>
+        </div>
       </v-expand-transition>
     </div>
+    <v-footer fixed>
+      <v-spacer></v-spacer>
+      <CloseComponent class="mr-5" text="保存草稿"></CloseComponent>
+      <ConfirmComponent text="提交" @click.native="uploadBlog"></ConfirmComponent>
+    </v-footer>
   </v-navigation-drawer>
 </template>
 
 <script>
 import {mapState} from "vuex";
+import ConfirmComponent from "../../components/form/ConfirmComponent";
+import CloseComponent from "../../components/form/CloseComponent";
+import {addCategory, getCategories, release} from "../../api/blog/editor";
 
 export default {
   name: "EditorSetting",
+  components: {
+    ConfirmComponent,
+    CloseComponent
+  },
   props: {
     words: {
       type: Object,
@@ -184,6 +147,14 @@ export default {
     language: {
       type: String,
       default: 'zh-CN'
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    editText: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -193,57 +164,87 @@ export default {
       alias_info: '',
       date_menu: false,
       release_date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-      categories: [
-        {
-          id: 1,
-          name: 'java',
-          children: [
-            {
-              id: 2,
-              name: 'javafx'
-            },
-            {
-              id: 3,
-              name: 'c'
-            }
-          ]
-        },
-        {
-          id: "002",
-          name: 'go',
-          children: [
-            {
-              id: "002-0",
-              name: 'gin'
-            }
-          ]
-        }
-      ],
+      categories: [],
       checked_category: [],
+      checked_category_id: [],
+      categoryResultArray: [],
       checked_category_object: [],
       show_addCategory: true,
-      addCategory_path:'/'
+      parentCategory: '/',
+      category_name: '',
     }
   },
+  mounted() {
+    this.getCategories()
+  },
   methods: {
+    getCategories() {
+      getCategories().then(response => {
+        this.categories = response.data.categories
+      })
+    },
     showSetting() {
       this.show = !this.show
+    },
+    addCategory() {
+      let parentCategoryId
+      if (this.parentCategory !== '/') {
+        let setParentId = (array) => {
+          for (let i in array) {
+            if (array[i].name === this.parentCategory) {
+              parentCategoryId = array[i].id
+            }
+            if (array[i].children) {
+              setParentId(array[i].children)
+            }
+          }
+        }
+        setParentId(this.categories)
+      } else {
+        parentCategoryId = 0
+      }
+      addCategory({name: this.category_name, parentId: parentCategoryId}).then(() => {
+        this.getCategories()
+      }).catch(() => {
+
+      }).finally(() => {
+
+      });
+    },
+    uploadBlog() {
+      if (this.title && this.editText) {
+        release({
+              title: this.title,
+              content: this.editText,
+              context: this.editText.substring(0, 100),
+              alias: this.alias,
+              categoriesId: this.checked_category_id
+            }
+        ).then(() => {
+
+        }).catch(() => {
+
+        }).finally(() => {
+          this.show = false
+        })
+      }
     }
   },
   computed: {
     ...mapState('user', ['userInfo']),
     optionalCategory() {
-      if (this.categories.length === 0) return []
-      let array = []
-      for (let i = 0; i < this.categories.length; i++) {
-        array.push(this.categories[i].name)
-        if (this.categories[i].children.length !== 0) {
-          for (let j = 0; j < this.categories[i].children.length; j++) {
-            array.push(this.categories[i].children[j].name)
+      if (this.categories.length === 0) return ['/']
+      let forArray = (array) => {
+        for (let i in array) {
+          this.categoryResultArray.push(array[i].name)
+          if (array[i].children) {
+            forArray(array[i].children)
           }
         }
+        this.categoryResultArray.unshift('/')
+        return this.categoryResultArray
       }
-      return array
+      return forArray(this.categories)
     }
   },
   watch: {
@@ -257,8 +258,10 @@ export default {
     },
     checked_category_object() {
       this.checked_category = []
+      this.checked_category_id = []
       for (let i = 0; i < this.checked_category_object.length; i++) {
         this.checked_category.push(this.checked_category_object[i].name)
+        this.checked_category_id.push(this.checked_category_object[i].id)
       }
     },
   }

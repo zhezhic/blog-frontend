@@ -208,12 +208,14 @@
               @click="showSetting"
           >
             <v-icon>mdi-upload</v-icon>
-            <span>{{ words.release }}</span>
+            <span>{{ this.userInfo ? words.release : "登陆"+words.release}}</span>
           </v-btn>
           <EditorSetting
               ref="editorSetting"
               :language="language"
               :words="words"
+              :title="blog.title"
+              :edit-text="blog.editText"
           >
           </EditorSetting>
           <!--        navigation-->
@@ -307,6 +309,7 @@
 
       </div>
     </v-sheet>
+
     <!--    release loading-->
     <v-overlay :value="release_overlay">
       <v-progress-circular
@@ -318,7 +321,7 @@
 </template>
 
 <script>
-import ButtonIcon from "../../components/ButtonIcon";
+import ButtonIcon from "../../components/form/ButtonIcon";
 import EditorSetting from "./EditorSetting";
 import {md} from "../../utils/markdown";
 import {CONFIG} from "../../editor/editor_config";
@@ -326,7 +329,8 @@ import toolbar_left_click from "../../editor/toolbar_left_click";
 import toolbar_right_click from "../../editor/toolbar_right_click";
 import keydownListen from "../../editor/keyboard_listen";
 import screenfull from 'screenfull'
-import {release, uploadImage} from "../../api/post/editor";
+import {release, uploadImage} from "../../api/blog/editor";
+import {mapState} from "vuex";
 
 export default {
   name: "Editor",
@@ -338,13 +342,12 @@ export default {
     blog: {
       title: '',
       editText: '',
-
     },
     historyText: [],
     historyIndex: 0,
     inputTimeout: '',
     image: '',
-    language: 'en',
+    language: '',
     words: '',
     show_setting: true,
     navigation_overlay: false,
@@ -373,10 +376,12 @@ export default {
     }
     //初始化historyText
     this.historyText.push(this.blog.editText)
+    console.log(this.userInfo)
   },
   computed: {
+    ...mapState('user', ['userInfo']),
     showReleaseBtn() {
-      if (this.blog.editText === '' || this.blog.title === '') {
+      if (this.blog.editText === '' || this.blog.title === '' || this.userInfo==null) {
         return true
       }
       return false

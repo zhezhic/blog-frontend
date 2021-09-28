@@ -11,11 +11,13 @@
         class="topButton"
     >
       <v-icon>mdi-chevron-up</v-icon>
+<!--      <v-icon>mdi-update</v-icon>-->
     </v-btn>
   </v-fab-transition>
 </template>
 
 <script>
+import goTo from 'vuetify/lib/services/goto'
 export default {
   name: "BackToTop",
   data:()=>({
@@ -32,7 +34,8 @@ export default {
       this.show = window.pageYOffset > 50
     },
     toTop() {
-      window.scrollTo(0,0)
+      // window.scrollTo(0,0)
+      goTo(0)
     }
   }
 }

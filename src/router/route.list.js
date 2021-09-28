@@ -31,23 +31,18 @@ export const routes = [
         meta: {title: '个人资料', requireAuth: true},
         component: () => import('views/user/Profile')
     },
-    // {
-    //   path: '/posts',
-    //   name: 'Posts',
-    //   redirect: '/posts/list',
-    //   meta: {title: '文章',requireAuth:true},
-    //   children: [
-    //     {
-    //       path: '/posts/list',
-    //       name: 'PostList',
-    //       component: () => import('@/views/blog/PostList'),
-    //       meta: { title: '所有文章'}
-    //     },
     {
-        path: '/posts/write',
-        name: 'PostWrite',
+        path: '/edit',
+        name: 'BlogEdit',
         component: () => import('views/blog/Editor'),
         meta: {title: '写博客'}
+    },
+    {
+        path: '/blog/:id',
+        name: 'Blog',
+        props: true,
+        component: () => import('views/blog/BlogInfo'),
+        meta: {title: '----'}
     },
     {
         path: '/posts/write2',
@@ -67,13 +62,11 @@ export const routes = [
         component: () => import('comps/Test'),
         meta: {title: 'test'}
     },
-    //   ]
-    // },
     {
         path: '/404',
         name: '404',
         meta: {title: '404'},
-        component: () => import('comps/404')
+        component: () => import('comps/NotFound')
     },
     {
         path: "*",

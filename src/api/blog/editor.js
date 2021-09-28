@@ -17,7 +17,22 @@ const release = (blog) => {
         data: blog,
     })
 }
+const getCategories=()=>{
+    return request(({
+        url:'/blog/getCategories',
+        method: 'get'
+    }))
+}
+const addCategory=(category)=>{
+    return request(({
+        url:'/blog/addCategory',
+        method: 'post',
+        data: category,
+    }))
+}
 export {
     uploadImage,
-    release
+    release,
+    getCategories,
+    addCategory
 }

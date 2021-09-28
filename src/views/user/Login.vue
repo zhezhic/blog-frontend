@@ -55,8 +55,8 @@
 </template>
 
 <script>
-import PasswordField from "../../components/PasswordField";
-import EmailField from "../../components/EmailField";
+import PasswordField from "../../components/form/PasswordField";
+import EmailField from "../../components/form/EmailField";
 
 export default {
   name: "Login",
@@ -84,15 +84,14 @@ export default {
       if (this.valid) {
         this.loading = true;
         this.valid = false
-        this.$store.dispatch('user/login', this.userInfo)
-            .then(() => {
-              this.loading = false;
-              this.valid = true
-              this.$store.dispatch('user/info')
-              this.$router.push('/home')
-            }).catch(() => {
-              this.loading = false;
-              this.valid = true
+        this.$store.dispatch('user/login', this.userInfo).then(() => {
+          this.$store.dispatch('user/info')
+          this.$router.push('/home')
+        }).catch(() => {
+
+        }).finally(()=>{
+          this.loading = false;
+          this.valid = true
         })
       }
 

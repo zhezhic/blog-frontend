@@ -47,9 +47,9 @@
 
 <script>
 import {register} from "../../api/user/register";
-import PasswordField from "../../components/PasswordField";
-import NameField from "../../components/NameField";
-import EmailField from "../../components/EmailField";
+import PasswordField from "../../components/form/PasswordField";
+import NameField from "../../components/form/NameField";
+import EmailField from "../../components/form/EmailField";
 export default {
   name: "Register",
   components:{
@@ -76,7 +76,7 @@ export default {
           this.loading = false;
           this.valid = true
           if (response.code === 200) {
-            this.$router.push('login')
+            this.$router.push('user/login')
           }
         }).catch(() => {
           this.loading = false;

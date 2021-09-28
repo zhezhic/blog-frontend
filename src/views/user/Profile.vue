@@ -157,9 +157,9 @@
 <script>
 import {editAvatar, updatePassword, updateProfile} from "../../api/user/profile";
 import {mapState} from "vuex";
-import PasswordField from "../../components/PasswordField";
-import NameField from "../../components/NameField";
-import EmailField from "../../components/EmailField";
+import PasswordField from "../../components/form/PasswordField";
+import NameField from "../../components/form/NameField";
+import EmailField from "../../components/form/EmailField";
 
 export default {
   name: "Profile",

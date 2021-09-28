@@ -103,4 +103,37 @@ $dark-color: #272727;
 .pointer {
   cursor: pointer;
 }
+.subhead{
+  color: rgba(0,0,0,0.6);
+}
+.hljs {
+  overflow: scroll;
+}
+
+.hljs::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  /**/
+}
+
+.hljs::-webkit-scrollbar-track {
+  background: rgb(125, 104, 104);
+  border-radius: 2px;
+}
+
+.hljs::-webkit-scrollbar-thumb {
+  background: #1976D2;
+  border-radius: 10px;
+}
+
+.hljs::-webkit-scrollbar-thumb:hover {
+  background: #258bf8;
+}
+
+.hljs::-webkit-scrollbar-corner {
+  background: #179a16;
+}
+.header-anchor{
+  text-decoration: none;
+}
 </style>
