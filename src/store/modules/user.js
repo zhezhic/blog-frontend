@@ -1,5 +1,4 @@
-import {login} from "../../api/user/login";
-import {info} from "../../api/user/info";
+import {login,getInfo} from "../../api/user/user";
 
 const state = {
     token: localStorage.getItem('token'),
@@ -28,9 +27,9 @@ const actions = {
                     return response
                 })
     },
-    info({commit}) {
+    getInfo({commit}) {
         return new Promise((resolve, reject) => {
-            info().then((response) => {
+            getInfo().then((response) => {
                     const {data} = response
                     commit('setUser', data.userInfo)
                     resolve()

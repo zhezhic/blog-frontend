@@ -25,7 +25,7 @@ export default {
   mounted() {
     //app挂载完毕如果有token向服务器发起获取用户信息请求
     if (this.$store.state.user.token) {
-      this.$store.dispatch('user/info').catch(() => {
+      this.$store.dispatch('user/getInfo').catch(() => {
         this.$router.push('login')
         this.$store.commit('user/clearUserState')
       });

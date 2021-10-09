@@ -42,7 +42,7 @@ export const routes = [
         name: 'Blog',
         props: true,
         component: () => import('views/blog/BlogInfo'),
-        meta: {title: '----'}
+        meta: {title: '---'}
     },
     {
         path: '/posts/write2',

@@ -155,7 +155,7 @@
 </template>
 
 <script>
-import {editAvatar, updatePassword, updateProfile} from "../../api/user/profile";
+import {updateAvatar, updatePassword, updateProfile} from "../../api/user/user";
 import {mapState} from "vuex";
 import PasswordField from "../../components/form/PasswordField";
 import NameField from "../../components/form/NameField";
@@ -225,7 +225,7 @@ export default {
         this.editAvatar.valid=false
         const formData = new FormData();
         formData.append('file', this.editAvatar.avatar)
-        editAvatar(formData).then(() => {
+        updateAvatar(formData).then(() => {
           this.editAvatar.loading = false
           this.editAvatar.dialog = false
           this.$router.go(0)
@@ -238,7 +238,7 @@ export default {
       if (this.profile.valid) {
         this.profile.loading=true
         updateProfile(this.profile).then(() => {
-          this.$store.dispatch('user/info')
+          this.$store.dispatch('user/getInfo')
           this.profile.loading=false
         }).catch(()=>{
           this.profile.loading=false

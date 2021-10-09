@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import {register} from "../../api/user/register";
+import {register} from "../../api/user/user";
 import PasswordField from "../../components/form/PasswordField";
 import NameField from "../../components/form/NameField";
 import EmailField from "../../components/form/EmailField";
@@ -76,7 +76,7 @@ export default {
           this.loading = false;
           this.valid = true
           if (response.code === 200) {
-            this.$router.push('user/login')
+            this.$router.push('login')
           }
         }).catch(() => {
           this.loading = false;

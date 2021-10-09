@@ -16,15 +16,10 @@ const queryCategoryNameByIds = (ids)=> request({
     url: `/blog/queryCategoryNameByIds/${ids}`,
     method: 'get',
 })
-const addComment = (comment)=> request({
-    url: '/addComment',
-    method: 'post',
-    data: comment
-})
+
 export {
     queryBlogPage,
     queryCategoryNameById,
     queryCategoryNameByIds,
     queryBlogById,
-    addComment
 }

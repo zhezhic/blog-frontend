@@ -85,10 +85,9 @@ export default {
         this.loading = true;
         this.valid = false
         this.$store.dispatch('user/login', this.userInfo).then(() => {
-          this.$store.dispatch('user/info')
+          this.$store.dispatch('user/getInfo')
           this.$router.push('/home')
         }).catch(() => {
-
         }).finally(()=>{
           this.loading = false;
           this.valid = true

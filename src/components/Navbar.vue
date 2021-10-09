@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import {logout} from "../api/user/logout";
+import {logout} from "../api/user/user";
 import {mapState} from "vuex";
 
 export default {

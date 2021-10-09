@@ -85,7 +85,6 @@ export default {
     }else {
       this.categoryName = "未分类"
     }
-
   }
 }
 </script>
@@ -99,15 +98,5 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  /*max-width: 320px;*/
-  /*width: 100%;*/
-  /*height: 0;*/
-  /*padding-top: 75%;*/
-  /*overflow: hidden;*/
-  /*background-position: center center;*/
-  /*background-repeat: no-repeat;*/
-  /*background-size: cover;*/
-  /*-webkit-background-size: cover;*/
-  /*-moz-background-size: cover;*/
 }
 </style>

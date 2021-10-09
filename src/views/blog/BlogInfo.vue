@@ -1,6 +1,6 @@
 <template>
   <div v-if="blog">
-    <v-card  class="mx-16 mt-10" elevation="5">
+    <v-card class="mx-16 mt-10" elevation="5">
       <h1 class="text-center">{{ blog.title }}</h1>
       <v-divider class="mt-4"></v-divider>
       <div class="miscellaneous">
@@ -55,52 +55,76 @@
           v-html="renderContent"
       >
       </div>
-<!--      <v-footer class="copy-field justify-end">-->
-<!--        <v-text-field-->
-<!--            class="copy-input"-->
-<!--            outlined-->
-<!--            dense-->
-<!--            placeholder="评论一下吧~"-->
-<!--        >-->
-<!--        </v-text-field>-->
-<!--        <v-btn class="confirm" color="primary">提交</v-btn>-->
-<!--      </v-footer>-->
     </v-card>
-    <Comment class="mx-16" elevation="5"></Comment>
+
+    <v-card
+        class="mx-16"
+        elevation="5"
+    >
+      <ReleaseComment
+          :blog-id="blog.id"
+      ></ReleaseComment>
+      <div>
+        <v-subheader>已有{{commentCount}}条评论</v-subheader>
+      </div>
+      <CommentView
+          v-if="comments"
+          class="ma-4"
+          :comment_author_id="comments[0].authorId"
+          :comment_time="comments[0].updateTime"
+          :comment_content="comments[0].content"
+      >
+      </CommentView>
+      {{comments}}
+    </v-card>
 
   </div>
 </template>
 
 <script>
 import {queryBlogById, queryCategoryNameByIds} from "../../api/blog/blog";
+import {queryCommentsByBlogId} from "../../api/blog/comment";
 import {md} from "../../utils/markdown";
-import Comment from "./Comment";
+import ReleaseComment from "./ReleaseComment";
+import CommentView from "./CommentView";
+
 export default {
   name: "BlogInfo",
-  components:{
-    Comment,
+  components: {
+    CommentView,
+    ReleaseComment,
   },
-  props: ['id'],
+  props: {
+    id: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       blog: null,
       rating: 3.2,
       renderContent: '',
       categories: [],
-      comment:''
+      comments: ''
     }
   },
   created() {
     queryBlogById(this.id).then((res) => {
       this.blog = res.data.blog
       this.renderContent = md.render(this.blog.content)
-      if (this.blog.categoriesId.length>0){
+      if (this.blog.categoriesId.length > 0) {
         queryCategoryNameByIds(this.blog.categoriesId).then((res) => {
           this.categories = res.data.categories
         })
       }
     }).catch(() => {
     })
+  },
+  mounted() {
+    queryCommentsByBlogId(this.id).then((res)=>{
+      this.comments=res.data.comments
+    }).catch(()=>{})
   },
   methods: {
     randomColor() {
@@ -117,6 +141,19 @@ export default {
       }
       return this.categories
     },
+    commentCount() {
+      let length=this.comments.length
+      let counter = function (comments){
+        for (let comment in comments) {
+          if (comment.children){
+            length+=comment.children.length
+            counter(comment.children)
+          }
+        }
+      }
+      counter(this.comments)
+      return length
+    }
   },
 }
 </script>
@@ -140,13 +177,16 @@ li {
 .render {
 
 }
-.copy-field{
+
+.copy-field {
   /*flex-direction: column;*/
 }
-.copy-input{
+
+.copy-input {
   width: 100%;
 }
-.confirm{
+
+.confirm {
   /*justify-content: flex-end;*/
 }
 </style>
