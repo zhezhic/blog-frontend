@@ -5,13 +5,14 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import 'mavon-editor/dist/css/index.css'
 import 'highlight.js/styles/atom-one-dark.css'
-import dayjs from "dayjs";
 Vue.config.productionTip = false
-Vue.prototype.$dayjs = dayjs
 new Vue({
   router,
   store,
   vuetify,
+  beforeCreate() {
+    Vue.prototype.$bus=this
+  },
   render: h => h(App)
 }).$mount('#app')
 

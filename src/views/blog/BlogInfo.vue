@@ -62,22 +62,44 @@
         elevation="5"
     >
       <ReleaseComment
-          :blog-id="blog.id"
+          :blog_id="blog.id"
       ></ReleaseComment>
       <div>
-        <v-subheader>已有{{commentCount}}条评论</v-subheader>
+        <v-subheader v-if="comments.length">已有{{commentCount}}条评论</v-subheader>
+        <v-subheader v-else>暂无评论</v-subheader>
       </div>
-      <CommentView
-          v-if="comments"
-          class="ma-4"
-          :comment_author_id="comments[0].authorId"
-          :comment_time="comments[0].updateTime"
-          :comment_content="comments[0].content"
-      >
-      </CommentView>
-      {{comments}}
+      <template v-if="comments.length">
+        <CommentView
+            class="ma-4"
+            v-for="comment in comments"
+            :key="comment.id"
+            :blog_id="blog.id"
+            :comment_id="comment.id"
+            :comment_author_id="comment.authorId"
+            :comment_time="comment.updateTime"
+            :comment_content="comment.content"
+            :show_reply_comment_id="showReplyCommentId"
+        >
+          <template v-if="comment.children.length" v-slot:default>
+            <CommentView
+                class="ma-10"
+                v-for="childComment in comment.children"
+                :key="childComment.id"
+                :is_child_comment="true"
+                :blog_id="blog.id"
+                :comment_id="childComment.id"
+                :parent_comment_id="comment.id"
+                :comment_author_id="childComment.authorId"
+                :comment_time="childComment.updateTime"
+                :comment_content="childComment.content"
+                :show_reply_comment_id="showReplyCommentId"
+            >
+            </CommentView>
+          </template>
+        </CommentView>
+      </template>
+      <div class="space"></div>
     </v-card>
-
   </div>
 </template>
 
@@ -106,12 +128,14 @@ export default {
       rating: 3.2,
       renderContent: '',
       categories: [],
-      comments: ''
+      comments: [],
+      showReplyCommentId: ''
     }
   },
   created() {
     queryBlogById(this.id).then((res) => {
       this.blog = res.data.blog
+      document.title=this.blog.title
       this.renderContent = md.render(this.blog.content)
       if (this.blog.categoriesId.length > 0) {
         queryCategoryNameByIds(this.blog.categoriesId).then((res) => {
@@ -122,16 +146,28 @@ export default {
     })
   },
   mounted() {
-    queryCommentsByBlogId(this.id).then((res)=>{
-      this.comments=res.data.comments
-    }).catch(()=>{})
+    this.updateCommentView()
+    this.$bus.$on('changeExistReply',this.changeExistReply)
+    this.$bus.$on('updateCommentView',this.updateCommentView)
+  },
+  beforeDestroy() {
+    this.$bus.$off('changeExistReply')
+    this.$bus.$off('updateCommentView')
   },
   methods: {
     randomColor() {
-      let r = Math.floor((Math.random() * 180) + 80)
-      let g = Math.floor((Math.random() * 180) + 80)
-      let b = Math.floor((Math.random() * 180) + 80)
-      return `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`
+      let r = Math.floor((Math.random() * 180) + 80).toString(16)
+      let g = Math.floor((Math.random() * 180) + 80).toString(16)
+      let b = Math.floor((Math.random() * 180) + 80).toString(16)
+      return `#${r}${g}${b}`
+    },
+    changeExistReply(commentId) {
+      this.showReplyCommentId=commentId;
+    },
+    updateCommentView() {
+      queryCommentsByBlogId(this.id).then((res)=>{
+        this.comments=res.data.comments
+      }).catch(()=>{})
     }
   },
   computed: {
@@ -173,20 +209,7 @@ export default {
 li {
   list-style: none;
 }
-
-.render {
-
-}
-
-.copy-field {
-  /*flex-direction: column;*/
-}
-
-.copy-input {
-  width: 100%;
-}
-
-.confirm {
-  /*justify-content: flex-end;*/
+.space{
+  height: 10px;
 }
 </style>

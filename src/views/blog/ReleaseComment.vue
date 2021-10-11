@@ -6,6 +6,7 @@
         dense
         outlined
         placeholder="评论一下吧~"
+        autofocus
         @keydown.enter="addComment"
     >
     </v-text-field>
@@ -25,25 +26,37 @@ import {addComment} from "../../api/blog/comment";
 export default {
   name: "ReleaseComment",
   props: {
-    blogId: {
+    'is_child_comment': {
+      type: Boolean,
+      default: false,
+    },
+    'blog_id': {
+      type: String,
+      default: ""
+    },
+    'parent_id': {
       type: String,
       default: "0"
-    }
+    },
+    'parent_comment_username': {
+      type: String,
+      default: ''
+    },
   },
   data() {
     return {
       content: '',
-      parentId: 0,
     }
   },
   methods: {
     addComment() {
       if (this.content) {
         addComment({
-          content: this.content,
-          parentId: this.parentId,
-          blogId: this.blogId
+          content: this.is_child_comment?'@'+this.parent_comment_username+' '+this.content:this.content,
+          parentId: this.parent_id,
+          blogId: this.blog_id
         }).then(() => {
+          this.$bus.$emit('updateCommentView')
         }).catch(() => {
         });
       }

@@ -43,7 +43,9 @@ export default {
 * {
   font-family: "JetBrains-Mono", "Source-CN";
 }
-
+a{
+  text-decoration: none;
+}
 $normal-color: #f3f3f3;
 $dark-color: #272727;
 

@@ -11,7 +11,6 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "cos-js-sdk-v5": "^1.2.16",
-    "dayjs": "^1.10.7",
     "highlight.js": "^11.2.0",
     "markdown-it": "^12.2.0",
     "markdown-it-anchor": "^8.3.0",
