@@ -1,6 +1,6 @@
 <template>
   <div v-if="blog">
-    <v-card class="mx-16 mt-10" elevation="5">
+    <v-card class="mx-16 mt-10 exhibition" elevation="5">
       <h1 class="text-center">{{ blog.title }}</h1>
       <v-divider class="mt-4"></v-divider>
       <div class="miscellaneous">
@@ -56,7 +56,21 @@
       >
       </div>
     </v-card>
-
+    <v-btn
+        fixed
+        icon
+        class="toc-btn"
+        color="primary"
+        @click="drawer=!drawer"
+    >
+      <v-icon>mdi-menu-right-outline</v-icon>
+    </v-btn>
+    <v-navigation-drawer
+      v-model="drawer"
+      fixed
+    >
+      <div class="toc" v-html="navigation"></div>
+    </v-navigation-drawer>
     <v-card
         class="mx-16"
         elevation="5"
@@ -124,6 +138,7 @@ export default {
   },
   data() {
     return {
+      drawer: false,
       blog: null,
       rating: 3.2,
       renderContent: '',
@@ -171,6 +186,13 @@ export default {
     }
   },
   computed: {
+    navigation() {
+      if (this.blog.content === '' || this.blog.content.match('#\\s') === null) {
+        return ''
+      }
+      let reg = '<nav class="table-of-contents"(\\S*?)[^>]*>.*<.nav>';
+      return md.render(this.blog.content + '\n${toc}').match(reg)[0]
+    },
     filterCategories() {
       if (this.categories.length > 3) {
         return this.categories.slice(0, 3)
@@ -207,7 +229,32 @@ export default {
 }
 
 li {
-  list-style: none;
+  list-style: none !important;
+}
+.exhibition{
+  /*width: 1400px;*/
+  /*margin: 0 auto;*/
+}
+.toc-btn{
+  position: fixed;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+}
+.arrow-right{
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  cursor: pointer;
+  border: 2px solid #888;
+  border-left-width: 0;
+  border-bottom-width: 0;
+  transform: matrix(0.71,0.71,-0.71,0.71,0,0);
 }
 .space{
   height: 10px;

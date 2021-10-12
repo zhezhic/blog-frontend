@@ -46,6 +46,9 @@ export default {
 a{
   text-decoration: none;
 }
+li{
+  list-style: none;
+}
 $normal-color: #f3f3f3;
 $dark-color: #272727;
 
