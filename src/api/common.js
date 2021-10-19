@@ -1,11 +1,11 @@
-import request from "../../utils/request";
+import request from "../utils/request";
 
-const randomBackground = () => {
+const searchTitle = (keyword,current,size) => {
     return request({
-        url: '/common/randomBackground',
+        url: `/searchTitle/${keyword}/${current}/${size}`,
         method: 'get',
     })
 }
 export {
-    randomBackground,
+    searchTitle,
 }

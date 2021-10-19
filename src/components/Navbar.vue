@@ -13,17 +13,36 @@
         </v-tab>
       </v-tabs>
 
-      <v-spacer></v-spacer>
+      <!--      <v-spacer></v-spacer>-->
       <!--      搜索-->
-      <v-btn icon>
+      <v-btn v-if="$vuetify.breakpoint.xs" icon>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
+      <v-autocomplete
+          v-if="!$vuetify.breakpoint.xs"
+          v-model="search.select"
+          :items="search.items"
+          :loading="search.loading"
+          :search-input.sync="search.search"
+          append-icon=""
+          dense
+          hide-details
+          hide-no-data
+          label="搜索(按 回车)"
+          outlined
+          prepend-icon="mdi-magnify"
+      >
+<!--        <template v-slot:selection="data">-->
+<!--          <span v-html="data.item"></span>-->
+<!--        </template>-->
+<!--        <template v-slot:item="data">-->
+<!--          <span v-html="data.item"></span>-->
+<!--        </template>-->
+      </v-autocomplete>
       <!--      编辑doc-->
-      <router-link to="/edit">
-        <v-btn v-show="$route.path!=='/edit'" icon>
-          <v-icon>mdi-file-document-edit-outline</v-icon>
-        </v-btn>
-      </router-link>
+      <v-btn v-show="$route.path!=='/edit'" icon to="/edit">
+        <v-icon>mdi-file-document-edit-outline</v-icon>
+      </v-btn>
       <!--      登陆-->
       <v-btn v-if="!userInfo" icon to="/login">
         <v-avatar class="primary" size="33">
@@ -81,6 +100,7 @@
 
 <script>
 import {logout} from "../api/user/user";
+import {searchTitle} from "../api/common";
 import {mapState} from "vuex";
 
 export default {
@@ -90,6 +110,13 @@ export default {
       drawer: false,
       group: null,
       darkSwitch: false,
+      search: {
+        select: null,
+        loading: false,
+        items: [],
+        search: '',
+        states: [],
+      }
     }
   },
   mounted() {
@@ -107,6 +134,21 @@ export default {
         this.$store.commit('errorTip', error.message)
       })
     },
+    querySelections(val) {
+      this.search.loading = true
+      this.search.items = []
+      searchTitle(val, 0, 5).then(res => {
+        console.log(res.data.list)
+        if (res.data.list.length) {
+          let list = res.data.list
+          for (let i = 0; i < list.length; i++) {
+            this.search.items.push(list[i].title)
+          }
+        }
+      }).finally(() => {
+        this.search.loading = false
+      })
+    }
   },
   watch: {
     group() {
@@ -114,6 +156,9 @@ export default {
     },
     darkSwitch() {
       this.$vuetify.theme.dark = this.darkSwitch
+    },
+    'search.search'(val) {
+      val && val !== this.search.select && this.querySelections(val)
     }
   },
 
@@ -121,5 +166,7 @@ export default {
 </script>
 
 <style scoped>
-
+.search-box {
+  margin: 0 10px;
+}
 </style>
