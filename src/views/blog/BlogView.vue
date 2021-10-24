@@ -8,11 +8,24 @@
               class="blog-img"
               lazy-src="https://picsum.photos/id/11/10/6"
               transition="fade-transition"
-          ></v-img>
+          >
+            <template v-slot:placeholder>
+              <v-row
+                  class="fill-height ma-0"
+                  align="center"
+                  justify="center"
+              >
+                <v-progress-circular
+                    indeterminate
+                    color="grey lighten-5"
+                ></v-progress-circular>
+              </v-row>
+            </template>
+          </v-img>
         </v-col>
         <v-col cols="12" md="6" order-md="first" sm="12">
           <TopicIcon :text="date" icon="mdi-clock-outline" type="ml-5"></TopicIcon>
-          <div class="text-h6 ml-5">{{ title }}</div>
+          <div class="text-h6 ml-5" v-html="title"></div>
           <div>
             <TopicIcon icon="mdi-eye-outline" text="333" type="ml-5">
               <template v-slot:default>

@@ -1,4 +1,4 @@
-//text area是否存在
+//keyword area是否存在
 function isExistSelectionObj(textareaDom) {
     return typeof textareaDom.selectionStart === 'number' && typeof textareaDom.selectionEnd === 'number';
 }

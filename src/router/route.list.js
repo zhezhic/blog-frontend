@@ -45,6 +45,13 @@ export const routes = [
         meta: {title: '---'}
     },
     {
+        path: '/search/:content',
+        name: 'Search',
+        props: true,
+        component: () => import('views/Search'),
+        meta: {title: '搜索'}
+    },
+    {
         path: '/posts/write2',
         name: 'PostWrite2',
         component: () => import('views/blog/Editor2'),

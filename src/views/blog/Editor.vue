@@ -302,7 +302,7 @@
               class="render my-4"
               v-html="renderText">
           </div>
-          <!--        html-text-->
+          <!--        html-keyword-->
           <div v-if="show_html_text" class="render my-4" v-text="renderText"></div>
 
         </div>

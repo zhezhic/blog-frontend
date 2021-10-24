@@ -19,7 +19,7 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
       <v-autocomplete
-          v-if="!$vuetify.breakpoint.xs"
+          v-if="!$vuetify.breakpoint.xs&&$route.name!=='Search'"
           v-model="search.select"
           :items="search.items"
           :loading="search.loading"
@@ -30,15 +30,15 @@
           hide-no-data
           label="搜索(按 回车)"
           outlined
-          prepend-icon="mdi-magnify"
+          @keyup.enter="startSearch"
       >
-<!--        <template v-slot:selection="data">-->
-<!--          <span v-html="data.item"></span>-->
-<!--        </template>-->
-<!--        <template v-slot:item="data">-->
-<!--          <span v-html="data.item"></span>-->
-<!--        </template>-->
+        <template v-slot:append>
+          <v-btn small icon @click="startSearch">
+            <v-icon>mdi-magnify</v-icon>
+          </v-btn>
+        </template>
       </v-autocomplete>
+
       <!--      编辑doc-->
       <v-btn v-show="$route.path!=='/edit'" icon to="/edit">
         <v-icon>mdi-file-document-edit-outline</v-icon>
@@ -138,7 +138,6 @@ export default {
       this.search.loading = true
       this.search.items = []
       searchTitle(val, 0, 5).then(res => {
-        console.log(res.data.list)
         if (res.data.list.length) {
           let list = res.data.list
           for (let i = 0; i < list.length; i++) {
@@ -148,6 +147,11 @@ export default {
       }).finally(() => {
         this.search.loading = false
       })
+    },
+    startSearch() {
+      if (this.search.search) {
+        this.$router.push({path:`/search/${this.search.search}`})
+      }
     }
   },
   watch: {
