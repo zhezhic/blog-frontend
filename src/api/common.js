@@ -2,17 +2,24 @@ import request from "../utils/request";
 
 const searchTitle = (keyword,current,size) => {
     return request({
-        url: `/searchTitle/${keyword}/${current}/${size}`,
+        url: `/search/title/${keyword}/${current}/${size}`,
         method: 'get',
     })
 }
-const multiSearch = (content,current,size) => {
+const searchBlog = (content,current,size) => {
     return request({
-        url: `/multiSearch/${content}/${current}/${size}`,
+        url: `/search/blog/${content}/${current}/${size}`,
+        method: 'get',
+    })
+}
+const searchName = (keyword,current,size) => {
+    return request({
+        url: `/search/name/${keyword}/${current}/${size}`,
         method: 'get',
     })
 }
 export {
     searchTitle,
-    multiSearch
+    searchBlog,
+    searchName
 }

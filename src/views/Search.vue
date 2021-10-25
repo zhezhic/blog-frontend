@@ -8,7 +8,7 @@
               :loading="loading"
               v-on="on"
               v-bind="attrs"
-              @keydown.enter="searchBlogs"
+              @keydown.enter="searchBlog"
               solo
               dense
               hide-details
@@ -24,7 +24,7 @@
         </v-list>
         <span v-else>无结果</span>
       </v-menu>
-      <v-btn :loading="loading" class="search-btn ml-4" color="primary" @click="searchBlogs">搜索</v-btn>
+      <v-btn :loading="loading" class="search-btn ml-4" color="primary" @click="searchBlog">搜索</v-btn>
     </div>
     <keep-alive>
       <div class="mt-10 category">
@@ -77,7 +77,7 @@
             </div>
           </v-tab-item>
           <v-tab-item>
-            <UserView></UserView>
+            <UserView :keyword="keyword"></UserView>
           </v-tab-item>
         </v-tabs-items>
       </div>
@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import {multiSearch, searchTitle} from "../api/common";
+import {searchBlog, searchTitle} from "../api/common";
 import BlogView from "./blog/BlogView";
 import UserView from "./search/UserView";
 export default {
@@ -117,10 +117,10 @@ export default {
     changeKeyword(v) {
       this.keyword=v
     },
-    searchBlogs() {
+    searchBlog() {
       if (!this.keyword) return
       this.loading = true
-      multiSearch(this.keyword, 0, 10).then((res => {
+      searchBlog(this.keyword, 0, 10).then((res => {
           this.blogs = res.data.list
       })).finally(() => {
         this.loading = false
@@ -143,7 +143,7 @@ export default {
   },
   mounted() {
     this.searchTitle()
-    this.searchBlogs()
+    this.searchBlog()
   }
 }
 </script>
@@ -156,13 +156,6 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-/*.search-content{*/
-/*  width: 50%;*/
-/*  margin: 0 auto;*/
-/*  !*display: flex;*!*/
-/*  !*align-items: center;*!*/
-/*  !*justify-content: center;*!*/
-/*}*/
 .category{
   margin-right: 200px !important;
   margin-left: 200px !important;

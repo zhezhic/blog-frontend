@@ -52,6 +52,13 @@ export const routes = [
         meta: {title: '搜索'}
     },
     {
+        path: '/user/:id',
+        name: 'User',
+        props: true,
+        component: () => import('views/user/UserInfo'),
+        meta: {title: '**的空间'}
+    },
+    {
         path: '/posts/write2',
         name: 'PostWrite2',
         component: () => import('views/blog/Editor2'),
