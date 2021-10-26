@@ -48,7 +48,7 @@ export const routes = [
         path: '/search/:content',
         name: 'Search',
         props: true,
-        component: () => import('views/Search'),
+        component: () => import('views/search/Search'),
         meta: {title: '搜索'}
     },
     {

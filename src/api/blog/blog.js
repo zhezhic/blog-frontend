@@ -8,6 +8,10 @@ const queryBlogById = (id)=> request({
     url: `/blog/queryBlogById/${id}`,
     method: 'get'
 })
+const queryBlogsByUserId = (id)=> request({
+    url: `/blog/queryBlogsByUserId/${id}`,
+    method: 'get',
+})
 const queryBlogByIds = (ids)=> request({
     url: `/blog/queryBlogByIds/${ids}`,
     method: 'get',
@@ -26,5 +30,6 @@ export {
     queryCategoryNameById,
     queryCategoryNameByIds,
     queryBlogById,
+    queryBlogsByUserId,
     queryBlogByIds
 }

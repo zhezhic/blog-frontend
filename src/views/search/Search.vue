@@ -87,9 +87,9 @@
 </template>
 
 <script>
-import {searchBlog, searchTitle} from "../api/common";
-import BlogView from "./blog/BlogView";
-import UserView from "./search/UserView";
+import {searchBlog, searchTitle} from "../../api/common";
+import BlogView from "../blog/BlogView";
+import UserView from "./UserView";
 export default {
   name: "Search",
   props: ['content'],
