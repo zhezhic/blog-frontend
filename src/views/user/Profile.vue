@@ -13,15 +13,14 @@
                   offset-y="90"
                   overlap
               >
-              <template v-slot:badge>
-                <v-icon color="primary" size="30">mdi-image-edit</v-icon>
-              </template>
-              <v-avatar color="success" size="100">
-                <img :src="userInfo.avatar" alt="用户头像">
-              </v-avatar>
-            </v-badge>
+                <template v-slot:badge>
+                  <v-icon color="primary" size="30">mdi-image-edit</v-icon>
+                </template>
+                <v-avatar color="success" size="100">
+                  <img :src="userInfo.avatar" alt="用户头像">
+                </v-avatar>
+              </v-badge>
             </span>
-
             <!--            修改头像dialog-->
             <v-dialog
                 v-model="editAvatar.dialog"
@@ -76,7 +75,7 @@
           <div class="text-caption ml-2 my-2 mt-4 grey--text">累计发表了8篇文章</div>
           <v-divider class="mx-2"></v-divider>
           <div class="text-caption ml-2 my-2 grey--text">累计获得了44个评论</div>
-          <v-divider class="mx-2"></v-divider>
+          <v-btn :to="`/user/${userInfo.id}`" absolute right>访客视角</v-btn>
         </v-card>
       </v-col>
       <!--      个人资料-->
@@ -121,11 +120,12 @@
                 ></v-text-field>
                 <v-btn
                     :disabled="isDisabled"
+                    :loading="profile.loading"
                     class="mb-2"
                     color="primary"
                     @click="submitProfile"
-                    :loading="profile.loading"
-                >保存</v-btn>
+                >保存
+                </v-btn>
               </v-form>
             </v-tab-item>
             <!--            密码-->
@@ -143,7 +143,8 @@
                     class="my-2"
                     color="primary"
                     @click="submitPassword"
-                >修改</v-btn>
+                >修改
+                </v-btn>
               </v-form>
             </v-tab-item>
           </v-tabs-items>
@@ -194,7 +195,7 @@ export default {
         newPassword: '',
         confirmPassword: '',
         valid: false,
-        loading:false
+        loading: false
       },
     }
   },
@@ -222,7 +223,7 @@ export default {
     uploadImg() {
       if (this.editAvatar.valid) {
         this.editAvatar.loading = true
-        this.editAvatar.valid=false
+        this.editAvatar.valid = false
         const formData = new FormData();
         formData.append('file', this.editAvatar.avatar)
         updateAvatar(formData).then(() => {
@@ -236,29 +237,29 @@ export default {
     },
     submitProfile() {
       if (this.profile.valid) {
-        this.profile.loading=true
+        this.profile.loading = true
         updateProfile(this.profile).then(() => {
           this.$store.dispatch('user/getInfo')
-          this.profile.loading=false
-        }).catch(()=>{
-          this.profile.loading=false
+          this.profile.loading = false
+        }).catch(() => {
+          this.profile.loading = false
         })
       }
     },
     submitPassword() {
       if (this.password.valid && this.password.originPassword !== this.password.confirmPassword) {
         if (this.password.newPassword === this.password.confirmPassword) {
-          this.password.loading=true
+          this.password.loading = true
           updatePassword(this.password).then(() => {
             this.$router.push('/home')
             this.$store.commit('user/clearUserState')
-          }).catch(()=>{
-            this.password.loading=false
+          }).catch(() => {
+            this.password.loading = false
           })
         } else {
           this.$store.commit('warningTip', '两次密码不一致')
         }
-      }else {
+      } else {
         this.$store.commit('warningTip', '新密码无变化')
       }
     }

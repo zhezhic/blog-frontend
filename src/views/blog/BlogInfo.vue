@@ -24,16 +24,16 @@
             <span class="ml-1">标签</span>
           </v-subheader>
           <span class="ml-5">
-          <v-chip
-              v-for="category in filterCategories"
-              :key="category.id"
-              :color="randomColor()"
-              class="mr-2"
-              small
-          >
-            {{ category.name }}
-          </v-chip>
-        </span>
+            <v-chip
+                v-for="category in filterCategories"
+                :key="category.id"
+                :color="randomColor()"
+                class="mr-2"
+                small
+            >
+              {{ category.name }}
+            </v-chip>
+          </span>
         </div>
         <div class="item">
           <v-subheader class="">

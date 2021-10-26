@@ -1,24 +1,23 @@
 <template>
   <div v-if="user">
-    <v-card class="mx-16 mt-10 user-top">
+
+    <v-card class="mx-16 mt-10 user-top" elevation="4">
       <v-img
-          class="user-bg"
-          :src="background"
           :aspect-ratio="7"
+          :src="background"
+          class="user-bg"
           width="80%"
       >
         <template v-slot:default>
           <div class="user-info">
-            <div class="user-avatar">
-              <v-avatar>
-                <img :src="user.avatar"/>
-              </v-avatar>
-            </div>
+            <v-avatar class="user-avatar">
+              <img :src="user.avatar"/>
+            </v-avatar>
             <div class="user-content">
-              <span class="ml-5 text-h6 white--text">{{user.name}} </span>
+              <span class="ml-5 text-h6 white--text">{{ user.name }} </span>
               <br>
               <span class="ml-5 user-intro white--text">
-                {{user.intro?user.intro:"该用户很懒没有介绍"}}
+                {{ user.intro ? user.intro : "该用户很懒没有介绍" }}
               </span>
             </div>
           </div>
@@ -29,85 +28,147 @@
         <v-tab>说说</v-tab>
       </v-tabs>
     </v-card>
+
     <div class="mx-16 mt-5 user-content">
-      <v-card v-if="!blogs" class="air">
-        <div >暂无内容</div>
-      </v-card>
-      <v-card v-else class="content">
-        <v-list>
-          <v-list-item>
-            <v-list-item-action>hhh</v-list-item-action>
-          </v-list-item>
-          <v-list-item>dd</v-list-item>
+      <v-card
+          v-if="tab===0"
+          class="content"
+          elevation="4"
+      >
+        <v-list class="category ml-3" shaped>
+          <v-list-item-group
+              v-model="selectedItem"
+              color="primary"
+          >
+            <v-list-item>Ta的博客</v-list-item>
+            <v-list-item>Ta的标签</v-list-item>
+          </v-list-item-group>
         </v-list>
+        <div
+            v-if="blogs&&selectedItem===0"
+            class="content-view ma-5"
+        >
+          <BlogViewNoImg
+              v-for="(blog,index) in blogs"
+              :id="blog.id"
+              :key="index"
+              :categories="blog.categoriesId"
+              :context="blog.context"
+              :date="blog.updateTime"
+              :title="blog.title"
+              class="mb-5"
+          ></BlogViewNoImg>
+        </div>
+        <div
+            v-if="selectedItem===1"
+            class="content-view ma-5"
+        >
+          <div v-if="!categories">暂无标签</div>
+          <v-chip
+              v-for="category in categories"
+              :key="category.id"
+              :color="randomColor()"
+              class="mr-2 pointer"
+              small
+              :to="`/search/${category.name}`"
+          >
+            {{ category.name }}
+          </v-chip>
+        </div>
       </v-card>
-      <v-card class="other"></v-card>
+      <v-card
+          v-if="tab===1"
+          class="other"
+      >2
+      </v-card>
     </div>
+
   </div>
 </template>
 
 <script>
 import {getInfoById} from "../../api/user/user";
-import {queryBlogsByUserId} from "../../api/blog/blog";
+import {queryBlogsByUserId, queryCategoriesByUserId} from "../../api/blog/blog";
+import BlogViewNoImg from "../blog/BlogViewNoImg";
+
 export default {
   name: "UserInfo",
-  props:['id'],
+  components: {
+    BlogViewNoImg,
+  },
+  props: ['id'],
   data() {
-    return{
+    return {
       user: null,
       background: require("@/assets/user_background.png"),
-      tab:null,
+      tab: null,
       blogs: null,
+      selectedItem: 0,
+      categories: [],
     }
   },
   created() {
-    getInfoById(this.id).then(res =>{
+    getInfoById(this.id).then(res => {
       if (res.data.userInfo) {
-        this.user=res.data.userInfo;
-        document.title=this.user.name+"的空间"
+        this.user = res.data.userInfo;
+        document.title = this.user.name + "的空间"
       }
     })
-    queryBlogsByUserId(this.id).then(res =>{
+    queryBlogsByUserId(this.id).then(res => {
       if (res.data.blogs.length) {
-        this.blogs=res.data.blogs
+        this.blogs = res.data.blogs
       }
     })
+    queryCategoriesByUserId(this.id).then(res =>{
+      if (res.data.categories.length) {
+        this.categories = res.data.categories
+      }
+    })
+  },
+  methods:{
+    randomColor() {
+      let r = Math.floor((Math.random() * 180) + 80).toString(16)
+      let g = Math.floor((Math.random() * 180) + 80).toString(16)
+      let b = Math.floor((Math.random() * 180) + 80).toString(16)
+      return `#${r}${g}${b}`
+    },
   }
 }
 </script>
 
-<style scoped lang="scss">
-.user-top{
+<style lang="scss" scoped>
+.user-top {
   display: flex;
   flex-wrap: wrap;
-  .user-bg{
-  }
-  .user-info{
+
+  .user-info {
     position: absolute;
     left: 30px;
     bottom: 30px;
     display: flex;
-    .user-avatar{
+    flex-wrap: wrap;
+
+    .user-avatar {
+      margin-top: 7px;
     }
-    .user-content{
+
+    .user-content {
     }
   }
 }
-.user-content{
-  display: flex;
-  height: 600px;
-  justify-content: space-between;
-  .air{
-    min-width: 75%;
+
+.user-content {
+  .content {
     display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .content{
-    min-width: 75%;
-  }
-  .other{
-    min-width: 23%;
+
+    .category {
+      max-width: 200px;
+      height: 100%;
+    }
+
+    .content-view {
+      width: 90%;
+    }
   }
 }
 
