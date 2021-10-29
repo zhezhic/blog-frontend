@@ -1,25 +1,85 @@
 <template>
-  <v-card :to="`/blog/${id}`" outlined>
+  <v-card
+      @click="$router.push(`/blog/${id}`)"
+      outlined hover
+  >
     <div class="text-h5 ml-5" v-html="title"></div>
-    <div>
-      <div class="text-caption ml-5">
+    <div class="mt-3">
+      <div class="text-caption ml-5 mb-4">
         {{ context }}
       </div>
-      <TopicIcon icon="mdi-eye-outline" text="333" type="ml-5">
+      <TopicIcon icon="mdi-eye-outline" :text="hot" type="ml-5">
         <template v-slot:default>
-          <v-icon class="ml-3" small>mdi-comment-text-outline</v-icon>
-          <span class="ml-1">2</span>
-          <v-icon class="ml-3" small>mdi-folder-outline</v-icon>
-          <span class="ml-1">{{ categoryName }}</span>
+          <TopicIcon icon="mdi-comment-text-outline" :text="comment_count"></TopicIcon>
+          <TopicIcon icon="mdi-folder-outline" :text="categoryName"></TopicIcon>
           <TopicIcon :text="date" icon="mdi-clock-outline" type="ml-5"></TopicIcon>
         </template>
       </TopicIcon>
+    </div>
+    <div class="manage">
+      <v-btn
+          outlined
+          small
+          color="success"
+          :to="`/update/${id}`"
+      >
+        <v-icon>mdi-square-edit-outline</v-icon>
+        <span>编辑</span>
+      </v-btn>
+      <v-dialog
+          v-model="del_dialog"
+          width="500"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+              outlined
+              small
+              class="ml-4"
+              color="red"
+              v-bind="attrs"
+              v-on="on"
+          >
+            <v-icon>mdi-trash-can-outline</v-icon>
+            <span>删除</span>
+          </v-btn>
+        </template>
+
+        <v-card>
+          <v-card-title class="text-h5 red lighten-2">
+            确认对话框
+          </v-card-title>
+
+          <v-card-text>
+            删除文章将彻底丢失,请慎重选择？
+          </v-card-text>
+
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                color="red"
+                text
+                @click="deleteBlog"
+            >
+              确认
+            </v-btn>
+            <v-btn
+                color="primary"
+                text
+                @click="del_dialog = false"
+            >
+              取消
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </div>
   </v-card>
 </template>
 
 <script>
-import {queryCategoryNameById} from "../../api/blog/blog";
+import {queryCategoryNameById,deleteBlogById} from "../../api/blog/blog";
 import TopicIcon from "../../components/TopicIcon";
 
 export default {
@@ -46,6 +106,14 @@ export default {
       type: String,
       default: '-----'
     },
+    hot: {
+      type: Number,
+      default: 0
+    },
+    comment_count: {
+      type: Number,
+      default: 0
+    },
     id: {
       type: String,
       default: ''
@@ -53,7 +121,8 @@ export default {
   },
   data() {
     return {
-      categoryName: ''
+      categoryName: '',
+      del_dialog: false,
     }
   },
   mounted() {
@@ -65,10 +134,22 @@ export default {
     } else {
       this.categoryName = "未分类"
     }
+  },
+  methods:{
+    deleteBlog() {
+      deleteBlogById(this.id).finally(()=>{
+        this.del_dialog=false
+        this.$router.go(0)
+      })
+    }
   }
 }
 </script>
 
 <style scoped>
-
+.manage{
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+}
 </style>

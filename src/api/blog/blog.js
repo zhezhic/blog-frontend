@@ -28,7 +28,10 @@ const queryCategoryNameByIds = (ids)=> request({
     url: `/blog/queryCategoriesNameByUserId/${ids}`,
     method: 'get',
 })
-
+const deleteBlogById = (id)=> request({
+    url: `/blog/deleteBlogById/${id}`,
+    method: 'delete',
+})
 export {
     queryBlogPage,
     queryCategoryNameById,
@@ -36,5 +39,6 @@ export {
     queryCategoriesByUserId,
     queryBlogById,
     queryBlogsByUserId,
-    queryBlogByIds
+    queryBlogByIds,
+    deleteBlogById
 }

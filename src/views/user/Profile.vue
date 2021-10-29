@@ -1,10 +1,79 @@
 <template>
-  <v-container class="mt-15">
-    <v-row>
-      <v-col cols="12" md="6" sm="12">
-        <v-card>
-          <!--          头像-->
-          <div class="avatar text-center">
+  <!--      个人资料-->
+  <div>
+    <v-card-title class="text-subtitle-1">
+      <v-spacer></v-spacer>
+      个人资料
+      <v-spacer></v-spacer>
+
+    </v-card-title>
+    <v-tabs
+        v-model="tab"
+    >
+      <v-tab>
+        <v-icon small>mdi-card-account-details-outline</v-icon>
+        <span>&nbsp;基本资料</span>
+      </v-tab>
+      <v-tab>
+        <v-icon small>mdi-lock</v-icon>
+        <span>&nbsp;密码</span>
+      </v-tab>
+      <v-tab>
+        <v-icon small>mdi-image-edit-outline</v-icon>
+        <span>&nbsp;头像</span>
+      </v-tab>
+    </v-tabs>
+    <v-tabs-items v-model="tab">
+      <!--          基本资料-->
+      <v-tab-item>
+        <v-form
+            v-model="profile.valid"
+            class="ma-4"
+        >
+          <NameField :name.sync="profile.name"></NameField>
+          <EmailField :email.sync="profile.email"></EmailField>
+          <v-text-field
+              v-model.trim="profile.intro"
+              autocomplete="off"
+              class="mt-3"
+              clearable
+              counter
+              label="个人介绍"
+              outlined
+              placeholder="说点什么吧"
+          ></v-text-field>
+          <v-btn
+              :disabled="isDisabled"
+              :loading="profile.loading"
+              class="mb-2"
+              color="primary"
+              @click="submitProfile"
+          >保存
+          </v-btn>
+        </v-form>
+      </v-tab-item>
+      <!--            密码-->
+      <v-tab-item>
+        <v-form
+            v-model="password.valid"
+            class="ma-4"
+        >
+          <PasswordField :label="`原密码`" :password.sync="password.originPassword"></PasswordField>
+          <PasswordField :label="`新密码`" :password.sync="password.newPassword"></PasswordField>
+          <PasswordField :label="`确认密码`" :password.sync="password.confirmPassword"></PasswordField>
+          <v-btn
+              :disabled="!password.valid"
+              :loading="password.loading"
+              class="my-2"
+              color="primary"
+              @click="submitPassword"
+          >修改
+          </v-btn>
+        </v-form>
+      </v-tab-item>
+      <!--            头像-->
+      <v-tab-item>
+        <div class="avatar text-center">
             <span @click.stop="editAvatar.dialog=true">
               <v-badge
                   avatar
@@ -21,138 +90,46 @@
                 </v-avatar>
               </v-badge>
             </span>
-            <!--            修改头像dialog-->
-            <v-dialog
-                v-model="editAvatar.dialog"
-            >
-              <v-card>
-                <v-card-title>
-                  更换头像
-                  <v-spacer></v-spacer>
-                  <v-btn text @click.stop="editAvatar.dialog=false">
-                    <v-icon>mdi-close</v-icon>
-                  </v-btn>
-                </v-card-title>
-                <v-divider></v-divider>
-                <div class="img-input">
-                  <v-form v-model="editAvatar.valid">
-                    <v-file-input
-                        v-model="editAvatar.avatar"
-                        :loading="editAvatar.loading"
-                        :rules="editAvatar.avatarRule"
-                        accept="image/png, image/jpeg"
-                        chips
-                        placeholder="选择一张jpg/png格式的头像"
-                        prepend-icon="mdi-image"
-                        show-size
-                        truncate-length="30"
-                    ></v-file-input>
-                  </v-form>
-
-                </div>
-                <div class="text-center">
-                  <v-btn :disabled="!editAvatar.valid" class="mb-5" color="primary" @click="uploadImg">上传
-                  </v-btn>
-                </div>
-              </v-card>
-            </v-dialog>
-            <div>{{ userInfo.name }}</div>
-          </div>
-          <!--          历史详情-->
-          <div class="ml-2">
-            <v-icon small>
-              mdi-email
-            </v-icon>
-            <span class="text-caption grey--text">&nbsp;&nbsp;&nbsp;{{ userInfo.email }}</span>
-          </div>
-          <div class="ml-2">
-            <v-icon small>
-              mdi-calendar-multiselect
-            </v-icon>
-            <span class="text-caption grey--text">&nbsp;&nbsp;&nbsp;193天</span>
-          </div>
-          <v-divider class="mx-2"></v-divider>
-          <div class="text-caption ml-2 my-2 mt-4 grey--text">累计发表了8篇文章</div>
-          <v-divider class="mx-2"></v-divider>
-          <div class="text-caption ml-2 my-2 grey--text">累计获得了44个评论</div>
-          <v-btn :to="`/user/${userInfo.id}`" absolute right>访客视角</v-btn>
-        </v-card>
-      </v-col>
-      <!--      个人资料-->
-      <v-col cols="12" md="6" sm="12">
-        <v-card>
-          <v-card-title class="text-subtitle-1">
-            <v-spacer></v-spacer>
-            个人资料
-            <v-spacer></v-spacer>
-
-          </v-card-title>
-          <v-tabs
-              v-model="tab"
+          <!--            修改头像dialog-->
+          <v-dialog
+              v-model="editAvatar.dialog"
           >
-            <v-tab href="#tab-1">
-              <v-icon small>mdi-card-account-details-outline</v-icon>
-              <span>&nbsp;基本资料</span>
-            </v-tab>
-            <v-tab href="#tab-2">
-              <v-icon small>mdi-lock</v-icon>
-              <span>&nbsp;密码</span>
-            </v-tab>
-          </v-tabs>
-          <!--          基本资料-->
-          <v-tabs-items v-model="tab">
-            <v-tab-item value="tab-1">
-              <v-form
-                  v-model="profile.valid"
-                  class="ma-4"
-              >
-                <NameField :name.sync="profile.name"></NameField>
-                <EmailField :email.sync="profile.email"></EmailField>
-                <v-text-field
-                    v-model.trim="profile.intro"
-                    autocomplete="off"
-                    class="mt-3"
-                    clearable
-                    counter
-                    label="个人介绍"
-                    outlined
-                    placeholder="说点什么吧"
-                ></v-text-field>
-                <v-btn
-                    :disabled="isDisabled"
-                    :loading="profile.loading"
-                    class="mb-2"
-                    color="primary"
-                    @click="submitProfile"
-                >保存
+            <v-card>
+              <v-card-title>
+                更换头像
+                <v-spacer></v-spacer>
+                <v-btn text @click.stop="editAvatar.dialog=false">
+                  <v-icon>mdi-close</v-icon>
                 </v-btn>
-              </v-form>
-            </v-tab-item>
-            <!--            密码-->
-            <v-tab-item value="tab-2">
-              <v-form
-                  v-model="password.valid"
-                  class="ma-4"
-              >
-                <PasswordField :label="`原密码`" :password.sync="password.originPassword"></PasswordField>
-                <PasswordField :label="`新密码`" :password.sync="password.newPassword"></PasswordField>
-                <PasswordField :label="`确认密码`" :password.sync="password.confirmPassword"></PasswordField>
-                <v-btn
-                    :disabled="!password.valid"
-                    :loading="password.loading"
-                    class="my-2"
-                    color="primary"
-                    @click="submitPassword"
-                >修改
-                </v-btn>
-              </v-form>
-            </v-tab-item>
-          </v-tabs-items>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+              </v-card-title>
+              <v-divider></v-divider>
+              <div class="img-input">
+                <v-form v-model="editAvatar.valid">
+                  <v-file-input
+                      v-model="editAvatar.avatar"
+                      :loading="editAvatar.loading"
+                      :rules="editAvatar.avatarRule"
+                      accept="image/png, image/jpeg"
+                      chips
+                      placeholder="选择一张jpg/png格式的头像"
+                      prepend-icon="mdi-image"
+                      show-size
+                      truncate-length="30"
+                  ></v-file-input>
+                </v-form>
 
+              </div>
+              <div class="text-center">
+                <v-btn :disabled="!editAvatar.valid" class="mb-5" color="primary" @click="uploadImg">上传
+                </v-btn>
+              </div>
+            </v-card>
+          </v-dialog>
+          <div>{{ userInfo.name }}</div>
+        </div>
+      </v-tab-item>
+    </v-tabs-items>
+  </div>
 </template>
 
 <script>

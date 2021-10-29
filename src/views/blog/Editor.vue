@@ -205,7 +205,7 @@
               class="mr-7"
               color="primary"
               small
-              @click="showSetting"
+              @click="changeShowSetting"
           >
             <v-icon>mdi-upload</v-icon>
             <span>{{ this.userInfo ? words.release : "登陆"+words.release}}</span>
@@ -214,8 +214,10 @@
               ref="editorSetting"
               :language="language"
               :words="words"
-              :title="blog.title"
-              :edit-text="blog.editText"
+              :is-edit-mode="isEditMode"
+              :parent-alias="blog.alias"
+              :parent-categories-id="blog.categoriesId"
+              @uploadBlog="uploadBlog"
           >
           </EditorSetting>
           <!--        navigation-->
@@ -309,18 +311,11 @@
 
       </div>
     </v-sheet>
-
-    <!--    release loading-->
-    <v-overlay :value="release_overlay">
-      <v-progress-circular
-          indeterminate
-          size="64"
-      ></v-progress-circular>
-    </v-overlay>
   </div>
 </template>
 
 <script>
+import {queryBlogById} from "../../api/blog/blog";
 import ButtonIcon from "../../components/form/ButtonIcon";
 import EditorSetting from "./EditorSetting";
 import {md} from "../../utils/markdown";
@@ -328,8 +323,8 @@ import {CONFIG} from "../../editor/editor_config";
 import toolbar_left_click from "../../editor/toolbar_left_click";
 import toolbar_right_click from "../../editor/toolbar_right_click";
 import keydownListen from "../../editor/keyboard_listen";
-import screenfull from 'screenfull'
-import {release, uploadImage} from "../../api/blog/editor";
+import screenFull from 'screenfull'
+import {release,updateBlog, uploadImage} from "../../api/blog/editor";
 import {mapState} from "vuex";
 
 export default {
@@ -338,10 +333,16 @@ export default {
     ButtonIcon,
     EditorSetting
   },
+  props:['id'],
   data: () => ({
+    isEditMode: false,
     blog: {
       title: '',
       editText: '',
+      alias: '',
+      release_date:'',
+      categoriesId:[],
+      id: ''
     },
     historyText: [],
     historyIndex: 0,
@@ -351,26 +352,38 @@ export default {
     words: '',
     show_setting: true,
     navigation_overlay: false,
-    release_overlay: false,
     show_render: true,
     isFullscreen: false,
     show_html_text: false,
   }),
   created() {
+    if (this.id) {
+      this.isEditMode=true
+      queryBlogById(this.id).then(res =>{
+        if (res.data.blog) {
+          let blog = res.data.blog;
+          this.blog.title=blog.title
+          this.blog.editText=blog.content
+          this.blog.id=blog.id
+          this.blog.alias=blog.alias
+          this.blog.categoriesId=blog.categoriesId
+        }
+      })
+    }
     //初始化关键词
     let lang = CONFIG.language_list.indexOf(this.language) >= 0 ? this.language : 'zh-CN';
     this.words = CONFIG[`words_${lang}`];
   },
   beforeDestroy() {
-    screenfull.off('change', (e) => console.log(e))
+    screenFull.off('change', (e) => console.log(e))
     window.clearTimeout(this.inputTimeout)
   },
   mounted() {
     //键盘监听事件
     keydownListen(this)
     //全屏事件
-    if (screenfull.isEnabled) {
-      screenfull.on('change', () => {
+    if (screenFull.isEnabled) {
+      screenFull.on('change', () => {
         this.isFullscreen = !this.isFullscreen
       });
     }
@@ -381,10 +394,7 @@ export default {
   computed: {
     ...mapState('user', ['userInfo']),
     showReleaseBtn() {
-      if (this.blog.editText === '' || this.blog.title === '' || this.userInfo==null) {
-        return true
-      }
-      return false
+      return this.blog.editText === '' || this.blog.title === '' || this.userInfo == null;
     },
     isDark() {
       return this.$vuetify.theme.dark
@@ -455,20 +465,38 @@ export default {
       }).catch(() => {
       })
     },
-    showSetting() {
+    changeShowSetting() {
       this.$refs.editorSetting.showSetting()
     },
-    uploadBlog() {
-      if (this.blog.editText !== '' && this.blog.title !== '') {
-        this.release_overlay = true
-        release({title: this.blog.title, text: this.blog.editText}).then(() => {
-        }).catch(() => {
-        }).finally(() => {
-          this.release_overlay = false
-        })
+    uploadBlog(alias,release_date,checked_category) {
+      if (!this.blog.title && !this.blog.editText) return
+      if (this.isEditMode) {
+        updateBlog({
+              id: this.blog.id,
+              title: this.blog.title,
+              content: this.blog.editText,
+              context: this.blog.editText.substring(0, 100),
+              alias: this.blog.alias,
+              categoriesId: checked_category
+            }
+        ).finally(() => {
+          this.changeShowSetting()
+        });
+      }else {
+        release({
+              title: this.blog.title,
+              content: this.blog.editText,
+              context: this.blog.editText.substring(0, 100),
+              alias: alias,
+              categoriesId: checked_category
+            }
+        ).finally(() => {
+          this.changeShowSetting()
+        });
       }
-    }
-  },
+
+      }
+  }
 }
 </script>
 

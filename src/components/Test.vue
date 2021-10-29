@@ -1,29 +1,10 @@
 <template>
   <div>
-    <v-combobox
-        v-model="checked_categories"
-        :items="items"
-        multiple
-    >
-      <template v-slot:selection="data">
-
-        <v-chip
-            color="primary"
-            close
-            @click:close="data.parent.selectItem(data.item)"
-        >
-          <v-avatar
-              class="accent white--text"
-              left
-              v-text="data.item.slice(0, 1).toUpperCase()"
-          ></v-avatar>
-          {{ data.item }}
-        </v-chip>
-      </template>
-    </v-combobox>
-    {{checked_categories}}
-    <br>
-    {{items}}
+    <v-timeline  class="mb-5 mt-10" >
+      <v-timeline-item small>1</v-timeline-item>
+      <v-timeline-item small>2</v-timeline-item>
+      <v-timeline-item small>3</v-timeline-item>
+    </v-timeline>
   </div>
 
 </template>

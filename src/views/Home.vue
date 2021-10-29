@@ -18,6 +18,8 @@
               :title="blog.title"
               :category="blog.categoriesId"
               :context="blog.context"
+              :hot="blog.hot"
+              :comment_count="blog.commentCount"
               :id="blog.id"
           >
           </BlogView>

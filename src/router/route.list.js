@@ -38,6 +38,13 @@ export const routes = [
         meta: {title: '写博客'}
     },
     {
+        path: '/update/:id',
+        name: 'updateBlog',
+        props: true,
+        component: () => import('views/blog/Editor'),
+        meta: {title: '更新博客'}
+    },
+    {
         path: '/blog/:id',
         name: 'Blog',
         props: true,

@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import {routes} from "./route.list";
 import store from "../store";
-
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -18,7 +17,7 @@ router.beforeEach(((to, from, next) => {
             next('/login')
         }
     } else {
-        next()
+        next();
     }
 }))
 router.afterEach((to) => {

@@ -27,14 +27,10 @@
           <TopicIcon :text="date" icon="mdi-clock-outline" type="ml-5"></TopicIcon>
           <div class="text-h6 ml-5" v-html="title"></div>
           <div>
-            <TopicIcon icon="mdi-eye-outline" text="333" type="ml-5">
+            <TopicIcon icon="mdi-eye-outline" :text="hot" type="ml-5">
               <template v-slot:default>
-                <v-icon class="ml-3" small>mdi-comment-text-outline</v-icon>
-                <span class="ml-1">
-                  2
-                </span>
-                <v-icon class="ml-3" small>mdi-folder-outline</v-icon>
-                <span class="ml-1">{{ categoryName }}</span>
+                <TopicIcon icon="mdi-comment-text-outline" :text="comment_count"></TopicIcon>
+                <TopicIcon icon="mdi-folder-outline" :text="categoryName"></TopicIcon>
               </template>
             </TopicIcon>
             <div class="text-caption ml-5">
@@ -78,6 +74,14 @@ export default {
     context: {
       type: String,
       default: '-----'
+    },
+    hot: {
+      type: Number,
+      default: 0
+    },
+    comment_count: {
+      type: Number,
+      default: 0
     },
     id: {
       type: String,

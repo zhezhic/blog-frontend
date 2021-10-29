@@ -1,6 +1,6 @@
 <template>
-  <div v-if="blog">
-    <v-card class="mx-16 mt-10 exhibition" elevation="5">
+  <div v-if="blog" class="blog-info">
+    <v-card class="exhibition  mt-10" elevation="5">
       <h1 class="text-center">{{ blog.title }}</h1>
       <v-divider class="mt-4"></v-divider>
       <div class="miscellaneous">
@@ -24,6 +24,7 @@
             <span class="ml-1">标签</span>
           </v-subheader>
           <span class="ml-5">
+            <span v-if="!filterCategories.length">暂无标签</span>
             <v-chip
                 v-for="category in filterCategories"
                 :key="category.id"
@@ -49,6 +50,7 @@
         </span>
         </div>
       </div>
+      <v-divider></v-divider>
       <div
           v-if="renderContent"
           class="render ma-3"
@@ -56,23 +58,23 @@
       >
       </div>
     </v-card>
-    <v-btn
-        fixed
-        icon
-        class="toc-btn"
-        color="primary"
-        @click="drawer=!drawer"
-    >
-      <v-icon>mdi-menu-right-outline</v-icon>
-    </v-btn>
-    <v-navigation-drawer
-      v-model="drawer"
-      fixed
-    >
-      <div class="toc" v-html="navigation"></div>
-    </v-navigation-drawer>
+<!--    <v-btn-->
+<!--        fixed-->
+<!--        icon-->
+<!--        class="toc-btn"-->
+<!--        color="primary"-->
+<!--        @click="drawer=!drawer"-->
+<!--    >-->
+<!--      <v-icon>mdi-menu-right-outline</v-icon>-->
+<!--    </v-btn>-->
+<!--    <v-navigation-drawer-->
+<!--      v-model="drawer"-->
+<!--      fixed-->
+<!--    >-->
+<!--      <div class="toc" v-html="navigation"></div>-->
+<!--    </v-navigation-drawer>-->
     <v-card
-        class="mx-16"
+        class="comment"
         elevation="5"
     >
       <ReleaseComment
@@ -217,6 +219,11 @@ export default {
 </script>
 
 <style scoped>
+.blog-info{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .miscellaneous {
   width: 350px;
   margin: 0 auto;
@@ -232,29 +239,17 @@ li {
   list-style: none !important;
 }
 .exhibition{
+  width: 1100px;
+  /*max-width: 60%;*/
   /*width: 1400px;*/
   /*margin: 0 auto;*/
 }
-.toc-btn{
-  position: fixed;
-  margin: auto;
-  top: 0;
-  bottom: 0;
-  left: 0;
+.comment{
+  width: 1100px;
+  margin-top: 20px;
+  margin-bottom: 30px;
 }
-.arrow-right{
-  position: fixed;
-  width: 20px;
-  height: 20px;
-  margin: auto;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  cursor: pointer;
-  border: 2px solid #888;
-  border-left-width: 0;
-  border-bottom-width: 0;
-  transform: matrix(0.71,0.71,-0.71,0.71,0,0);
+.header-anchor{
 }
 .space{
   height: 10px;

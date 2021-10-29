@@ -40,9 +40,18 @@ const actions = {
 
     }
 }
+const getters={
+    getUserInfo(state) {
+        return state.userInfo
+    },
+    getToken(state) {
+        return state.token
+    }
+}
 export default {
     namespaced:true,
     state,
     mutations,
-    actions
+    actions,
+    getters
 }

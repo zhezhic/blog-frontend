@@ -50,7 +50,7 @@
         </v-avatar>
       </v-btn>
       <!--      登陆后头像-->
-      <v-btn v-if="userInfo" icon to="/profile">
+      <v-btn v-if="userInfo" icon :to="`/user/${userInfo.id}`">
         <v-avatar class="success" size="33">
           <img :src="userInfo.avatar" alt="用户头像">
         </v-avatar>

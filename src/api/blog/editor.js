@@ -17,6 +17,13 @@ const release = (blog) => {
         data: blog,
     })
 }
+const updateBlog = (blog) => {
+    return request({
+        url: '/blog/updateBlog',
+        method: 'post',
+        data: blog,
+    })
+}
 const getCategories=()=>{
     return request(({
         url:'/blog/getCategories',
@@ -33,6 +40,7 @@ const addCategory=(category)=>{
 export {
     uploadImage,
     release,
+    updateBlog,
     getCategories,
     addCategory
 }

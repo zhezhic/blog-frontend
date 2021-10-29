@@ -75,20 +75,18 @@
       <!--              文章分类-->
       <div class="text-uppercase">{{ words.settings.categories }}</div>
       <v-treeview
+          ref="categoryTree"
           v-if="categories"
-          v-model="checked_category_object"
+          v-model="checked_category"
           :items="categories"
           activatable
           hoverable
-          return-object
           rounded
           selectable
           selection-type="independent"
           transition
       >
       </v-treeview>
-      <!--      <div>{{checked_category}}</div>-->
-      <!--      <div>{{checked_category_object}}</div>-->
       <v-btn
           v-show="show_addCategory"
           class="ma-3"
@@ -129,7 +127,7 @@
 import {mapState} from "vuex";
 import ConfirmComponent from "../../components/form/ConfirmComponent";
 import CloseComponent from "../../components/form/CloseComponent";
-import {addCategory, getCategories, release} from "../../api/blog/editor";
+import {addCategory, getCategories} from "../../api/blog/editor";
 
 export default {
   name: "EditorSetting",
@@ -138,6 +136,10 @@ export default {
     CloseComponent
   },
   props: {
+    isEditMode:{
+      type: Boolean,
+      default: false,
+    },
     words: {
       type: Object,
       default() {
@@ -148,14 +150,16 @@ export default {
       type: String,
       default: 'zh-CN'
     },
-    title: {
+    parentAlias:{
       type: String,
       default: ''
     },
-    editText: {
-      type: String,
-      default: ''
-    }
+    parentCategoriesId:{
+      type: Array,
+      default() {
+        return []
+      }
+    },
   },
   data() {
     return {
@@ -163,19 +167,27 @@ export default {
       alias: '',
       alias_info: '',
       date_menu: false,
-      release_date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      release_date: null,
       categories: [],
       checked_category: [],
-      checked_category_id: [],
       categoryResultArray: [],
-      checked_category_object: [],
       show_addCategory: true,
       parentCategory: '/',
       category_name: '',
     }
   },
-  mounted() {
+  created() {
     this.getCategories()
+    this.release_date=new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000).toISOString().substr(0, 10);
+    if (this.isEditMode) {
+      this.alias=this.parentAlias
+      setTimeout(()=>{
+        this.$refs.categoryTree.$emit('input',this.parentCategoriesId)
+      },1000)
+    }
+  },
+  mounted() {
+
   },
   methods: {
     getCategories() {
@@ -212,22 +224,7 @@ export default {
       });
     },
     uploadBlog() {
-      if (this.title && this.editText) {
-        release({
-              title: this.title,
-              content: this.editText,
-              context: this.editText.substring(0, 100),
-              alias: this.alias,
-              categoriesId: this.checked_category_id
-            }
-        ).then(() => {
-
-        }).catch(() => {
-
-        }).finally(() => {
-          this.show = false
-        })
-      }
+      this.$emit('uploadBlog',this.alias,this.release_date,this.checked_category)
     }
   },
   computed: {
@@ -252,17 +249,9 @@ export default {
       immediate: true,
       handler(newValue) {
         if (this.userInfo) {
-          this.alias_info = process.env.VUE_APP_SERVER_URL + '/blog/' + this.userInfo.id + '/' + newValue;
+          this.alias_info = process.env.VUE_APP_SERVER_URL + '/blog/' + newValue;
         }
       },
-    },
-    checked_category_object() {
-      this.checked_category = []
-      this.checked_category_id = []
-      for (let i = 0; i < this.checked_category_object.length; i++) {
-        this.checked_category.push(this.checked_category_object[i].name)
-        this.checked_category_id.push(this.checked_category_object[i].id)
-      }
     },
   }
 }

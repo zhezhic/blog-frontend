@@ -1,7 +1,7 @@
 <template>
-  <span class="topic" :class="type" :style="{'justify-content':content}">
+  <span class="topic" :class="type">
     <v-icon small>{{ icon }}</v-icon>
-    <span class="ml-1"> {{ text }}</span>
+    <v-subheader class="icon-text">{{text}}</v-subheader>
     <slot></slot>
   </span>
 </template>
@@ -9,24 +9,7 @@
 <script>
 export default {
   name: "TopicIcon",
-  props:{
-    icon:{
-      type: String,
-      default: 'mdi-close-circle'
-    },
-    text:{
-      type: String,
-      default: 'null'
-    },
-    content:{
-      type: String,
-      default: ''
-    },
-    type:{
-      type: String,
-      default: ''
-    }
-  }
+  props:['icon','text','type']
 }
 </script>
 
@@ -39,5 +22,8 @@ export default {
   align-items: center;
   /*实现水平居中*/
   /*justify-content: left;*/
+}
+.icon-text{
+  padding: 9px;
 }
 </style>
