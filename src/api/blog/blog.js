@@ -8,8 +8,12 @@ const queryBlogById = (id)=> request({
     url: `/blog/queryBlogById/${id}`,
     method: 'get'
 })
-const queryBlogsByUserId = (id)=> request({
-    url: `/blog/queryBlogsByUserId/${id}`,
+const queryBlogsByUserId = ()=> request({
+    url: '/blog/queryBlogsByUserId',
+    method: 'get',
+})
+const queryBlogsByOtherUserId= (id)=> request({
+    url: `/blog/queryBlogsByOtherUserId/${id}`,
     method: 'get',
 })
 const queryBlogByIds = (ids)=> request({
@@ -37,6 +41,7 @@ export {
     queryCategoryNameById,
     queryCategoryNameByIds,
     queryCategoriesByUserId,
+    queryBlogsByOtherUserId,
     queryBlogById,
     queryBlogsByUserId,
     queryBlogByIds,

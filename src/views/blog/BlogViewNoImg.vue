@@ -10,9 +10,10 @@
       </div>
       <TopicIcon icon="mdi-eye-outline" :text="hot" type="ml-5">
         <template v-slot:default>
-          <TopicIcon icon="mdi-comment-text-outline" :text="comment_count"></TopicIcon>
-          <TopicIcon icon="mdi-folder-outline" :text="categoryName"></TopicIcon>
-          <TopicIcon :text="date" icon="mdi-clock-outline" type="ml-5"></TopicIcon>
+          <TopicIcon icon="mdi-comment-text-outline" :text="comment_count" type="ml-2"></TopicIcon>
+          <TopicIcon icon="mdi-folder-outline" :text="categoryName" type="ml-2"></TopicIcon>
+          <TopicIcon :text="date" icon="mdi-clock-outline" type="ml-2"></TopicIcon>
+          <TopicIcon v-if="isPublic===0" text="未发布" icon="mdi-lock-outline" type="ml-2" color="red"></TopicIcon>
         </template>
       </TopicIcon>
     </div>
@@ -117,6 +118,10 @@ export default {
     id: {
       type: String,
       default: ''
+    },
+    isPublic:{
+      type: Number,
+      default: 1
     }
   },
   data() {

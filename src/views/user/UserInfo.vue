@@ -35,68 +35,70 @@
         elevation="4"
     >
       <v-tabs-items v-model="tab" class="">
-<!--        博客-->
+        <!--        博客-->
         <v-tab-item class="user-blog">
-            <div
-                v-if="blogs"
-                class="user-blog"
-            >
-              <BlogViewNoImg
-                  v-for="(blog,index) in blogs"
-                  :id="blog.id"
-                  :key="index"
-                  :categories="blog.categoriesId"
-                  :context="blog.context"
-                  :hot="blog.hot"
-                  :comment_count="blog.commentCount"
-                  :date="blog.updateTime"
-                  :title="blog.title"
-                  class="mb-5"
-              ></BlogViewNoImg>
-            </div>
-            <div v-else>暂无内容</div>
+          <div
+              v-if="blogs"
+              class="user-blog"
+          >
+            <BlogViewNoImg
+                v-for="(blog,index) in blogs"
+                :id="blog.id"
+                :key="index"
+                :categories="blog.categoriesId"
+                :comment_count="blog.commentCount"
+                :context="blog.context"
+                :date="blog.updateTime"
+                :hot="blog.hot"
+                :is-public="blog.isPublic"
+                :title="blog.title"
+                class="mb-5"
+            ></BlogViewNoImg>
+          </div>
+          <div v-else>暂无内容</div>
         </v-tab-item>
         <!--      说说-->
         <v-tab-item>
           <div class="say-say">
             <v-textarea
                 v-model="say_say.editSay"
-                auto-grow
-                autofocus
-                outlined
-                clearable
-                placeholder="随便说点什么吧。"
-                counter="400"
                 :error-messages="verify"
                 :loading="say_say.loading"
+                auto-grow
+                autofocus
+                clearable
+                counter="400"
+                outlined
+                placeholder="随便说点什么吧。"
             ></v-textarea>
             <v-btn
-                color="primary"
-                class="release-btn"
                 :disabled="sayBtn"
                 :loading="say_say.loading"
+                class="release-btn"
+                color="primary"
                 @click="uploadSay"
-            >发布</v-btn>
+            >发布
+            </v-btn>
 
           </div>
           <div>
-            <v-timeline  class="mb-5 mt-10" >
+            <v-timeline class="mb-5 mt-10">
               <v-timeline-item
-                  small
                   v-for="(say,index) in say_say.says"
                   :key="index"
+                  small
               >
-                <v-card outlined class="say">
-                  <v-card-text>{{say.content}}</v-card-text>
+                <v-card class="say" outlined>
+                  <v-card-text>{{ say.content }}</v-card-text>
                   <v-card-subtitle>
                     <v-icon small>mdi-clock-outline</v-icon>
-                    {{say.updateTime}}
+                    {{ say.updateTime }}
                   </v-card-subtitle>
                   <v-btn
-                      outlined
-                      small
                       class="del-btn ml-4"
                       color="red"
+                      outlined
+                      small
                       @click="deleteSay(say.id)"
                   >
                     <v-icon>mdi-trash-can-outline</v-icon>
@@ -110,24 +112,24 @@
         </v-tab-item>
         <!--      标签-->
         <v-tab-item>
-            <div
-                class="content-view ma-5"
+          <div
+              class="content-view ma-5"
+          >
+            <div v-if="!categories">暂无标签</div>
+            <v-chip
+                v-for="category in categories"
+                :key="category.id"
+                :color="randomColor()"
+                :to="`/search/${category.name}`"
+                class="mr-2"
             >
-              <div v-if="!categories">暂无标签</div>
-              <v-chip
-                  v-for="category in categories"
-                  :key="category.id"
-                  :color="randomColor()"
-                  :to="`/search/${category.name}`"
-                  class="mr-2"
-              >
-                {{ category.name }}
-              </v-chip>
-            </div>
+              {{ category.name }}
+            </v-chip>
+          </div>
         </v-tab-item>
         <!--      设置-->
         <v-tab-item>
-            <Profile></Profile>
+          <Profile></Profile>
         </v-tab-item>
       </v-tabs-items>
     </v-card>
@@ -136,8 +138,8 @@
 
 <script>
 import {getInfoById} from "../../api/user/user";
-import {queryBlogsByUserId, queryCategoriesByUserId} from "../../api/blog/blog";
-import {addSay, querySay,deleteSayById} from "../../api/say";
+import {queryBlogsByOtherUserId, queryBlogsByUserId, queryCategoriesByUserId} from "../../api/blog/blog";
+import {addSay, deleteSayById, querySay} from "../../api/say";
 import BlogViewNoImg from "../blog/BlogViewNoImg";
 import Profile from "./Profile";
 import {mapState} from "vuex";
@@ -166,30 +168,36 @@ export default {
     }
   },
   created() {
-    if (this.id === this.userInfo.id) {
-      this.self = 1
-      this.user = this.userInfo
-      document.title = this.user.name + "的空间"
-    } else {
+    if (this.userInfo && this.id === this.userInfo.id) { //本人
+      this.self = 1;
+      this.user = this.userInfo;
+      document.title = this.user.name + "的空间";
+      queryBlogsByUserId().then(res => {
+        if (res.data.blogs.length) {
+          this.blogs = res.data.blogs
+        }
+      });
+    } else { //其他用户
       getInfoById(this.id).then(res => {
         if (res.data.userInfo) {
           this.user = res.data.userInfo;
           document.title = this.user.name + "的空间"
         }
       });
+      queryBlogsByOtherUserId(this.id).then(res => {
+        if (res.data.blogs.length) {
+          this.blogs = res.data.blogs
+        }
+      });
     }
-    queryBlogsByUserId(this.id).then(res => {
-      if (res.data.blogs.length) {
-        this.blogs = res.data.blogs
-      }
-    })
+
     queryCategoriesByUserId(this.id).then(res => {
       if (res.data.categories.length) {
         this.categories = res.data.categories
       }
     })
-    querySay(this.id).then(res =>{
-      this.say_say.says=res.data.says.reverse();
+    querySay(this.id).then(res => {
+      this.say_say.says = res.data.says.reverse();
     })
   },
   methods: {
@@ -201,9 +209,9 @@ export default {
     },
     uploadSay() {
       if (this.say_say.editSay.length) {
-        this.say_say.loading=true
-        addSay({content: this.say_say.editSay}).finally(()=>{
-          this.say_say.loading=false
+        this.say_say.loading = true
+        addSay({content: this.say_say.editSay}).finally(() => {
+          this.say_say.loading = false
           this.$router.go(0)
         })
       }
@@ -215,7 +223,7 @@ export default {
   computed: {
     ...mapState('user', ['userInfo']),
     verify() {
-      return this.say_say.editSay.length>400 ? "太长了" : ""
+      return this.say_say.editSay.length > 400 ? "太长了" : ""
     },
     sayBtn() {
       return this.say_say.editSay.length === 0 || this.say_say.editSay.length > 400
@@ -245,14 +253,16 @@ export default {
 .content {
 
 }
-.say-say{
-  .release-btn{
+
+.say-say {
+  .release-btn {
     float: right;
     margin-bottom: 20px;
   }
 }
-.say{
-  .del-btn{
+
+.say {
+  .del-btn {
     position: absolute;
     right: 20px;
     bottom: 20px;

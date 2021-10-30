@@ -468,7 +468,7 @@ export default {
     changeShowSetting() {
       this.$refs.editorSetting.showSetting()
     },
-    uploadBlog(alias,release_date,checked_category) {
+    uploadBlog(alias,release_date,checked_category,isPublic) {
       if (!this.blog.title && !this.blog.editText) return
       if (this.isEditMode) {
         updateBlog({
@@ -477,7 +477,8 @@ export default {
               content: this.blog.editText,
               context: this.blog.editText.substring(0, 100),
               alias: this.blog.alias,
-              categoriesId: checked_category
+              categoriesId: checked_category,
+              isPublic: isPublic===0? isPublic : 1
             }
         ).finally(() => {
           this.changeShowSetting()
@@ -488,7 +489,8 @@ export default {
               content: this.blog.editText,
               context: this.blog.editText.substring(0, 100),
               alias: alias,
-              categoriesId: checked_category
+              categoriesId: checked_category,
+              isPublic: isPublic===0? isPublic : 1
             }
         ).finally(() => {
           this.changeShowSetting()

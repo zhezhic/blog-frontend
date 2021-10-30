@@ -1,6 +1,6 @@
 <template>
   <span class="topic" :class="type">
-    <v-icon small>{{ icon }}</v-icon>
+    <v-icon small :color="color">{{ icon }}</v-icon>
     <v-subheader class="icon-text">{{text}}</v-subheader>
     <slot></slot>
   </span>
@@ -9,7 +9,7 @@
 <script>
 export default {
   name: "TopicIcon",
-  props:['icon','text','type']
+  props:['icon','text','type','color']
 }
 </script>
 

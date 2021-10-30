@@ -64,7 +64,7 @@
                     <BlogView
                         :background="background+'&'+Math.ceil(Math.random()*1000)"
                         :date="blog.createTime"
-                        :title="blog.highlight"
+                        :title="blog.highlight?blog.highlight:blog.title"
                         :category="blog.categoriesId"
                         :context="blog.context"
                         :id="blog.id"

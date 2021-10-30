@@ -117,7 +117,7 @@
     </div>
     <v-footer fixed>
       <v-spacer></v-spacer>
-      <CloseComponent class="mr-5" text="保存草稿"></CloseComponent>
+      <CloseComponent class="mr-5" text="保存草稿" @click.native="saveBlog"></CloseComponent>
       <ConfirmComponent text="提交" @click.native="uploadBlog"></ConfirmComponent>
     </v-footer>
   </v-navigation-drawer>
@@ -225,6 +225,9 @@ export default {
     },
     uploadBlog() {
       this.$emit('uploadBlog',this.alias,this.release_date,this.checked_category)
+    },
+    saveBlog() {
+      this.$emit('uploadBlog',this.alias,this.release_date,this.checked_category,0)
     }
   },
   computed: {
