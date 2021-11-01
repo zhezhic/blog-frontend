@@ -218,38 +218,33 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .blog-info{
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-.miscellaneous {
-  width: 350px;
-  margin: 0 auto;
-}
-
-.miscellaneous .item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  .miscellaneous {
+    width: 350px;
+    margin: 0 auto;
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+  .exhibition{
+    width: 1100px;
+  }
 }
 
 li {
   list-style: none !important;
 }
-.exhibition{
-  width: 1100px;
-  /*max-width: 60%;*/
-  /*width: 1400px;*/
-  /*margin: 0 auto;*/
-}
+
 .comment{
   width: 1100px;
   margin-top: 20px;
   margin-bottom: 30px;
-}
-.header-anchor{
 }
 .space{
   height: 10px;

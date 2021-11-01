@@ -8,12 +8,12 @@ const queryBlogById = (id)=> request({
     url: `/blog/queryBlogById/${id}`,
     method: 'get'
 })
-const queryBlogsByUserId = ()=> request({
-    url: '/blog/queryBlogsByUserId',
+const queryBlogsByUserId = (current,size)=> request({
+    url: `/blog/queryBlogsByUserId/${current}/${size}`,
     method: 'get',
 })
-const queryBlogsByOtherUserId= (id)=> request({
-    url: `/blog/queryBlogsByOtherUserId/${id}`,
+const queryBlogsByOtherUserId= (current,size,id)=> request({
+    url: `/blog/queryBlogsByOtherUserId/${current}/${size}/${id}`,
     method: 'get',
 })
 const queryBlogByIds = (ids)=> request({

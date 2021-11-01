@@ -1,31 +1,32 @@
 <template>
   <v-container>
-    <template v-if="blog.blogList.length">
+    <template v-if="blogList.length">
       <v-row
           justify-lg="space-around"
-          justify-md="center"
-          justify-sm="center"
           justify-xl="space-around"
       >
-        <v-col cols="12" lg="6" md="12" sm="12"
+        <v-col v-for="(blog,index) in blogList" :key="index" cols="12" lg="6"
+               md="12"
+               sm="12"
                xl="5"
-               v-for="(blog,index) in blog.blogList"
-               :key="index"
         >
           <BlogView
-              :background="background+'&'+new Date().getTime()"
-              :date="blog.createTime"
-              :title="blog.title"
-              :category="blog.categoriesId"
-              :context="blog.context"
-              :hot="blog.hot"
-              :comment_count="blog.commentCount"
               :id="blog.id"
+              :background="background"
+              :category="blog.categoriesId"
+              :comment_count="blog.commentCount"
+              :context="blog.context"
+              :date="blog.createTime"
+              :hot="blog.hot"
+              :title="blog.title"
           >
           </BlogView>
         </v-col>
       </v-row>
     </template>
+    <div class="loader my-10" v-intersect="moreBlog">
+      <v-btn :loading="loading" text></v-btn>
+    </div>
   </v-container>
 </template>
 
@@ -39,31 +40,43 @@ export default {
     BlogView,
   },
   data: () => ({
-    background: 'https://api.btstu.cn/sjbz/?lx=dongman',
+    background: 'https://w.wallhaven.cc/full/72/wallhaven-72rxqo.jpg',
     current: 1,
     size: 8,
-    blog: {
-      total: 0,
-      blogList: []
-    },
-    index: 0,
+    blogList: [],
+    loading: false,
   }),
   created() {
-    queryBlogPage(this.current, 8).then((res) => {
-      console.log(res.data.blog)
-      if (res.data.blog.blogList.length <= 8) {
-        this.$store.commit("warningTip", "博客到底了~")
-      }
-      this.blog.blogList = res.data.blog.blogList;
-      this.blog.total = res.data.blog.blogList.length
-      this.current++
-    }).catch(() => {
-    })
+    this.getBlogs()
   },
   methods: {
+    getBlogs() {
+      return new Promise((resolve) => {
+        queryBlogPage(this.current, this.size).then((res) => {
+          if (res.data.blog.blogList.length <= 8) {
+            this.$store.commit("warningTip", "博客到底了~")
+          }
+          this.blogList.push(...res.data.blog.blogList)
+          this.current++
+          resolve()
+        })
+      })
+    },
+    moreBlog(entries) {
+      if (entries[0].isIntersecting) {
+        this.loading=true
+        this.getBlogs().finally(()=>{
+          this.loading=false
+        })
+      }
+    }
   },
-  computed: {
-
-  }
+  computed: {}
 }
 </script>
+<style scoped lang="scss">
+.loader{
+  display: flex;
+  justify-content: center;
+}
+</style>

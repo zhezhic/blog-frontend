@@ -475,7 +475,7 @@ export default {
               id: this.blog.id,
               title: this.blog.title,
               content: this.blog.editText,
-              context: this.blog.editText.substring(0, 100),
+              context: this.blog.editText.substring(0, 80),
               alias: this.blog.alias,
               categoriesId: checked_category,
               isPublic: isPublic===0? isPublic : 1
@@ -487,7 +487,7 @@ export default {
         release({
               title: this.blog.title,
               content: this.blog.editText,
-              context: this.blog.editText.substring(0, 100),
+              context: this.blog.editText.substring(0, 80),
               alias: alias,
               categoriesId: checked_category,
               isPublic: isPublic===0? isPublic : 1
@@ -527,8 +527,6 @@ export default {
   height: 35px;
   border-left: 1px solid grey;
   margin: 0 6px 0 4px;
-
-
 }
 
 .edit-field {

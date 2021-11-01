@@ -120,7 +120,9 @@ $dark-color: #272727;
   height: 10px;
   /**/
 }
-
+#blog-img{
+  width: 100%;
+}
 .hljs::-webkit-scrollbar-track {
   background: rgb(125, 104, 104);
   border-radius: 2px;

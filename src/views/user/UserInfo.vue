@@ -38,11 +38,11 @@
         <!--        博客-->
         <v-tab-item class="user-blog">
           <div
-              v-if="blogs"
+              v-if="blog.blogList"
               class="user-blog"
           >
             <BlogViewNoImg
-                v-for="(blog,index) in blogs"
+                v-for="(blog,index) in blog.blogList"
                 :id="blog.id"
                 :key="index"
                 :categories="blog.categoriesId"
@@ -54,6 +54,11 @@
                 :title="blog.title"
                 class="mb-5"
             ></BlogViewNoImg>
+            <v-pagination
+                class="mb-5"
+                v-model="blog.current"
+                :length="getTotalLength"
+            ></v-pagination>
           </div>
           <div v-else>暂无内容</div>
         </v-tab-item>
@@ -157,7 +162,12 @@ export default {
       self: 0,
       background: require("@/assets/user_background.png"),
       tab: null,
-      blogs: null,
+      blog: {
+        current: 1,
+        size: 5,
+        blogList: [],
+        total: null,
+      },
       selectedItem: 0,
       categories: [],
       say_say: {
@@ -172,11 +182,7 @@ export default {
       this.self = 1;
       this.user = this.userInfo;
       document.title = this.user.name + "的空间";
-      queryBlogsByUserId().then(res => {
-        if (res.data.blogs.length) {
-          this.blogs = res.data.blogs
-        }
-      });
+      this.queryBlogsByUserId()
     } else { //其他用户
       getInfoById(this.id).then(res => {
         if (res.data.userInfo) {
@@ -184,13 +190,8 @@ export default {
           document.title = this.user.name + "的空间"
         }
       });
-      queryBlogsByOtherUserId(this.id).then(res => {
-        if (res.data.blogs.length) {
-          this.blogs = res.data.blogs
-        }
-      });
+      this.queryBlogsByOtherUserId()
     }
-
     queryCategoriesByUserId(this.id).then(res => {
       if (res.data.categories.length) {
         this.categories = res.data.categories
@@ -200,7 +201,32 @@ export default {
       this.say_say.says = res.data.says.reverse();
     })
   },
+  watch: {
+    'blog.current'() {
+      if (this.self) {
+        this.queryBlogsByUserId();
+      }else {
+        this.queryBlogsByOtherUserId()
+      }
+    }
+  },
   methods: {
+    queryBlogsByUserId() {
+      queryBlogsByUserId(this.blog.current,this.blog.size).then(res => {
+        if (res.data.blog.blogList.length) {
+          this.blog.blogList=res.data.blog.blogList
+          this.blog.total=res.data.blog.total
+        }
+      });
+    },
+    queryBlogsByOtherUserId() {
+      queryBlogsByOtherUserId(this.blog.current,this.blog.size,this.id).then(res => {
+        if (res.data.blog.blogList.length) {
+          this.blog.blogList=res.data.blog.blogList
+          this.blog.total=res.data.blog.total
+        }
+      });
+    },
     randomColor() {
       let r = Math.floor((Math.random() * 180) + 80).toString(16)
       let g = Math.floor((Math.random() * 180) + 80).toString(16)
@@ -228,6 +254,13 @@ export default {
     sayBtn() {
       return this.say_say.editSay.length === 0 || this.say_say.editSay.length > 400
     },
+    getTotalLength() {
+      if (this.blog.total % this.blog.size === 0) {
+        return this.blog.total/this.blog.size
+      }else {
+        return (this.blog.total/this.blog.size)+1
+      }
+    }
   },
 }
 </script>

@@ -1,13 +1,14 @@
 <template>
-  <v-card :to="`/blog/${id}`" elevation="6" rounded="lg">
+  <v-card :to="`/blog/${id}`" elevation="6" rounded="lg" >
     <v-container>
-      <v-row>
-        <v-col class="box-img" cols="12" md="6" order-md="last" sm="12">
+      <v-row class="blog-view">
+        <v-col class="box-img" cols="12" md="6" order-md="last" order-sm="first" sm="12">
           <v-img
-              :src="background+'&' + new Date().getTime()"
-              class="blog-img"
+              :src="background"
+              class="blog-view-img"
               lazy-src="https://picsum.photos/id/11/10/6"
               transition="fade-transition"
+              :aspect-ratio="aspectRatio"
           >
             <template v-slot:placeholder>
               <v-row
@@ -23,9 +24,9 @@
             </template>
           </v-img>
         </v-col>
-        <v-col cols="12" md="6" order-md="first" sm="12">
+        <v-col class="blog-view-info" cols="12" md="6" order-md="first" order-sm="last" sm="12">
           <TopicIcon :text="date" icon="mdi-clock-outline" type="ml-5"></TopicIcon>
-          <div class="text-h6 ml-5" v-html="title"></div>
+          <div class="title text-h6 ml-5" v-html="title"></div>
           <div>
             <TopicIcon icon="mdi-eye-outline" :text="hot" type="ml-5">
               <template v-slot:default>
@@ -33,7 +34,7 @@
                 <TopicIcon icon="mdi-folder-outline" :text="categoryName"></TopicIcon>
               </template>
             </TopicIcon>
-            <div class="text-caption ml-5">
+            <div class="context text-caption ml-5 ">
               {{ context }}
             </div>
           </div>
@@ -102,18 +103,41 @@ export default {
     }else {
       this.categoryName = "未分类"
     }
+  },
+  computed:{
+    aspectRatio(){
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs': return 3
+        case 'sm': return 3
+        case 'md': return 1.9
+        case 'lg': return 1.21
+        case 'xl': return 1.6
+      }
+      return 1.6
+    }
   }
 }
 </script>
 
-<style scoped>
-.box-img {
-  height: 220px;
+<style scoped lang="scss">
+
+.blog-view{
+  //height: 233px;
+  //overflow: hidden;
+  .box-img {
+    //width: 10px;
+    //height: 95%;
+    //overflow: hidden;
+    .blog-view-img {
+      //overflow: hidden;
+      //width: 100%;
+      //height: 100%;
+    }
+  }
+  .blog-view-info{
+    word-break: break-all;
+  }
 }
 
-.blog-img {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
+
 </style>
