@@ -66,12 +66,6 @@ export const routes = [
         meta: {title: '**的空间'}
     },
     {
-        path: '/posts/write2',
-        name: 'PostWrite2',
-        component: () => import('views/blog/Editor2'),
-        meta: {title: 'test'}
-    },
-    {
         path: '/posts/write3',
         name: 'MarkdownRenderer',
         component: () => import('comps/zhezhi.md'),
