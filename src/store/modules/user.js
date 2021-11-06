@@ -46,6 +46,9 @@ const getters={
     },
     getToken(state) {
         return state.token
+    },
+    getUserAvatar(state) {
+        return process.env.VUE_APP_SERVER_URL+process.env.VUE_APP_USER_AVATAR_URL+ state.userInfo.avatar
     }
 }
 export default {

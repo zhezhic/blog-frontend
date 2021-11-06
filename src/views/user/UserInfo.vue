@@ -11,7 +11,7 @@
         <template v-slot:default>
           <div class="user-info">
             <v-avatar class="user-avatar">
-              <img :src="user.avatar" alt="用户头像"/>
+              <img :src="getUserAvatar" alt="用户头像"/>
             </v-avatar>
             <div>
               <span class="ml-5 text-h6 white--text">{{ user.name }} </span>
@@ -147,7 +147,7 @@ import {queryBlogsByOtherUserId, queryBlogsByUserId, queryCategoriesByUserId} fr
 import {addSay, deleteSayById, querySay} from "../../api/say";
 import BlogViewNoImg from "../blog/BlogViewNoImg";
 import Profile from "./Profile";
-import {mapState} from "vuex";
+import {mapGetters, mapState} from "vuex";
 
 export default {
   name: "UserInfo",
@@ -248,6 +248,7 @@ export default {
   },
   computed: {
     ...mapState('user', ['userInfo']),
+    ...mapGetters('user',['getUserAvatar']),
     verify() {
       return this.say_say.editSay.length > 400 ? "太长了" : ""
     },

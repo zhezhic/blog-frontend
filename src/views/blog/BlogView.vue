@@ -4,7 +4,7 @@
       <v-row class="blog-view">
         <v-col class="box-img" cols="12" md="6" order-md="last" order-sm="first" sm="12">
           <v-img
-              :src="background"
+              :src="background+'&'+Math.random()*100"
               class="blog-view-img"
               lazy-src="https://picsum.photos/id/11/10/6"
               transition="fade-transition"

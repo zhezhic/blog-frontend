@@ -86,7 +86,7 @@
                   <v-icon color="primary" size="30">mdi-image-edit</v-icon>
                 </template>
                 <v-avatar color="success" size="100">
-                  <img :src="userInfo.avatar" alt="用户头像">
+                  <img :src="getUserAvatar" alt="用户头像">
                 </v-avatar>
               </v-badge>
             </span>
@@ -134,7 +134,7 @@
 
 <script>
 import {updateAvatar, updatePassword, updateProfile} from "../../api/user/user";
-import {mapState} from "vuex";
+import {mapGetters, mapState} from "vuex";
 import PasswordField from "../../components/form/PasswordField";
 import NameField from "../../components/form/NameField";
 import EmailField from "../../components/form/EmailField";
@@ -183,6 +183,7 @@ export default {
   },
   computed: {
     ...mapState('user', ['userInfo']),
+    ...mapGetters('user',['getUserAvatar']),
     isDisabled: {
       get() {
         const {name, email, intro} = this.userInfo;

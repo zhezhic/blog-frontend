@@ -12,7 +12,7 @@
         >
           <BlogView
               :id="blog.id"
-              :background="background"
+              :background="background+'&'+Math.random()*100"
               :category="blog.categoriesId"
               :comment_count="blog.commentCount"
               :context="blog.context"
@@ -40,7 +40,7 @@ export default {
     BlogView,
   },
   data: () => ({
-    background: 'https://w.wallhaven.cc/full/72/wallhaven-72rxqo.jpg',
+    background: 'https://api.btstu.cn/sjbz/?lx=dongman',
     current: 1,
     size: 8,
     blogList: [],

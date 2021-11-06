@@ -94,7 +94,7 @@ function upload_image($vm) {
     let image_link = {
         prefix: `![${$vm.words.image_alt}](`,
         suffix: ')',
-        str: process.env.VUE_APP_SERVER_URL+$vm.image
+        str: $vm.image
     }
     insertTextAtCaret(image_link,'upload_image',$vm)
 }

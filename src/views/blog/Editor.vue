@@ -460,9 +460,8 @@ export default {
       let formData = new FormData()
       formData.append('file', e.target.files[0])
       uploadImage(formData).then(response => {
-        this.image = response.data.imagePath
+        this.image = process.env.VUE_APP_SERVER_URL+process.env.VUE_APP_BLOG_IMAGE_URL+response.data.imagePath
         this.toolbar_left_click('upload_image')
-      }).catch(() => {
       })
     },
     changeShowSetting() {

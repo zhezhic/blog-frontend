@@ -52,7 +52,7 @@
       <!--      登陆后头像-->
       <v-btn v-if="userInfo" icon :to="`/user/${userInfo.id}`">
         <v-avatar class="success" size="33">
-          <img :src="userInfo.avatar" alt="用户头像">
+          <img :src="getUserAvatar" alt="用户头像">
         </v-avatar>
       </v-btn>
       <!--      日月-->
@@ -101,7 +101,7 @@
 <script>
 import {logout} from "../api/user/user";
 import {searchTitle} from "../api/common";
-import {mapState} from "vuex";
+import {mapState,mapGetters} from "vuex";
 
 export default {
   name: "Navbar",
@@ -123,6 +123,7 @@ export default {
   },
   computed: {
     ...mapState('user', ['userInfo']),
+    ...mapGetters('user',['getUserAvatar'])
   },
   methods: {
     logout() {
